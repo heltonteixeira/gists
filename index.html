@@ -8,10 +8,10 @@
             font-family: Arial, sans-serif;
         }
         .widget-container {
-            font-size: 24px;
+            font-size: 28px;
         }
         .widget-container a, .widget-container span {
-            font-size: 24px;
+            font-size: 28px;
         }
         .time, .sun {
             display: block;
@@ -19,9 +19,6 @@
         }
         .widget-container a {
             text-decoration: underline dotted;
-            color: inherit; /* Match the text color */
-        }
-        .widget-container a:visited {
             color: inherit; /* Match the text color */
         }
         /* Light theme */
@@ -34,7 +31,7 @@
         /* Dark theme */
         @media (prefers-color-scheme: dark) {
             body {
-                background-color: #000000;
+                background-color: #191919;
                 color: #ffffff;
             }
         }
@@ -63,13 +60,6 @@
                 sun_format: "Sunrise: srhour:srminute Sunset: sshour:ssminute",
                 coords: "41.3081500,-72.9281600"
             }
-        });
-
-        // Detect parent background color and set it for the widget
-        document.addEventListener("DOMContentLoaded", function() {
-            var widgetContainer = document.querySelector('.widget-container');
-            var parentBackgroundColor = window.getComputedStyle(document.body.parentElement).backgroundColor;
-            widgetContainer.style.backgroundColor = parentBackgroundColor;
         });
     </script>
 </body>
