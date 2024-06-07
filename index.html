@@ -21,20 +21,6 @@
             text-decoration: underline dotted;
             color: inherit; /* Match the text color */
         }
-        /* Light theme */
-        @media (prefers-color-scheme: light) {
-            body {
-                background-color: #ffffff;
-                color: #000000;
-            }
-        }
-        /* Dark theme */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #000000;
-                color: #ffffff;
-            }
-        }
     </style>
 </head>
 <body>
@@ -60,6 +46,13 @@
                 sun_format: "Sunrise: srhour:srminute Sunset: sshour:ssminute",
                 coords: "41.3081500,-72.9281600"
             }
+        });
+
+        // Detect parent background color and set it for the widget
+        document.addEventListener("DOMContentLoaded", function() {
+            var widgetContainer = document.querySelector('.widget-container');
+            var parentBackgroundColor = window.getComputedStyle(document.body.parentElement).backgroundColor;
+            widgetContainer.style.backgroundColor = parentBackgroundColor;
         });
     </script>
 </body>
