@@ -3,13 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>New Haven Time Widget</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .widget-container {
+            font-size: 28px;
+        }
+        .widget-container a, .widget-container span {
+            font-size: 28px;
+        }
+        .time, .sun {
+            display: block;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
-  <a href="https://time.is/New_Haven,_Connecticut" id="time_is_link" rel="nofollow" style="font-size:24px">Time in New Haven:</a>
-  <span id="New_Haven__Connecticut_z161" style="font-size:24px"></span>
-  <script src="//widget.time.is/en.js"></script>
-  <script>
-    time_is_widget.init({New_Haven__Connecticut_z161:{template:"TIME<br>SUN", time_format:"hours:minutes", sun_format:"Sunrise: srhour:srminute Sunset: sshour:ssminute", coords:"41.3081500,-72.9281600"}});
-  </script>
+    <div class="widget-container">
+        <div class="time">
+            <a href="https://time.is/New_Haven,_Connecticut" id="time_is_link" rel="nofollow">Time in New Haven:</a>
+            <span id="New_Haven__Connecticut_z161"></span>
+        </div>
+        <div class="sun">
+            <span id="New_Haven__Connecticut_z161_sun"></span>
+        </div>
+    </div>
+    <script src="//widget.time.is/en.js"></script>
+    <script>
+        time_is_widget.init({
+            New_Haven__Connecticut_z161: {
+                template: "TIME",
+                time_format: "hours:minutes",
+                coords: "41.3081500,-72.9281600"
+            },
+            New_Haven__Connecticut_z161_sun: {
+                template: "SUN",
+                sun_format: "Sunrise: srhour:srminute Sunset: sshour:ssminute",
+                coords: "41.3081500,-72.9281600"
+            }
+        });
+    </script>
 </body>
 </html>
