@@ -4,10 +4,10 @@ Welcome to my GitHub page! Here you'll find a collection of projects I've been w
 
 ## Projects
 
-* **[Sunrise]** - [A small snippet that show the hour, sunset, and sunrise accurated time for the city of New Haven.]
-    * [/sunrise]
-* **[V5 Dice]** - [A simple dice roller for Vampire: The Masquerade 5th edition.]
-    * [/v5-dice]
+* **Sunrise** - A small snippet that show the hour, sunset, and sunrise accurated time for the city of New Haven.
+    * [View Project](./sunrise)
+* **V5 Dice** - A simple dice roller for Vampire: The Masquerade 5th edition.
+    * [View Project](./v5-dice)
     * 
 ## Contact
 
