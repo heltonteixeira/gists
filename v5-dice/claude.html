@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vampire: The Masquerade Dice Roller</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+        }
+        .container {
+            background-color: #2a2a2a;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #ff4444;
+            margin-bottom: 1.5rem;
+        }
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #cccccc;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 0.5rem;
+            background-color: #3a3a3a;
+            border: 1px solid #555;
+            border-radius: 4px;
+            color: #f0f0f0;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #ff6666;
+        }
+        .dice-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .die {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.5s;
+}
+.hunger-die {
+    border: 2px solid #ff0000;
+}
+        @keyframes roll {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .results {
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .result-item {
+            margin-bottom: 0.5rem;
+        }
+        .success { color: #4caf50; }
+        .failure { color: #ff4444; }
+        .critical { color: #ffc107; }
+        .messy { color: #ff9800; }
+        .bestial { color: #9c27b0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vampire: The Masquerade Dice Roller</h1>
+        <div class="input-group">
+            <label for="regularDice">Regular Dice:</label>
+            <input type="number" id="regularDice" min="0" value="0">
+        </div>
+        <div class="input-group">
+            <label for="hungerDice">Hunger Dice:</label>
+            <input type="number" id="hungerDice" min="0" value="0">
+        </div>
+        <div class="input-group">
+            <label for="difficulty">Difficulty:</label>
+            <input type="number" id="difficulty" min="1" value="1">
+        </div>
+        <button id="rollButton">Roll Dice</button>
+        <div class="dice-container" id="diceContainer"></div>
+        <div class="results" id="results"></div>
+    </div>
+    <script>
+        const regularDiceImages = {
+            '1-5': 'https://i.imgur.com/x0rDGlG.png',
+            '6-9': 'https://i.imgur.com/DConmlW.png',
+            '10': 'https://i.imgur.com/AByS1LP.png'
+        };
+
+        const hungerDiceImages = {
+            '1': 'https://i.imgur.com/WDpzkkt.png',
+            '2-5': 'https://i.imgur.com/ws5Nxzw.png',
+            '6-9': 'https://i.imgur.com/cR5OSSs.png',
+            '10': 'https://i.imgur.com/UrbEja2.png'
+        };
+
+        function rollDie() {
+            return Math.floor(Math.random() * 10) + 1;
+        }
+
+        function getDiceImage(value, isHunger) {
+            const images = isHunger ? hungerDiceImages : regularDiceImages;
+            let key;
+            if (value === 10) key = '10';
+            else if (value === 1 && isHunger) key = '1';
+            else if (value <= 5) key = isHunger ? '2-5' : '1-5';
+            else key = '6-9';
+            return images[key];
+        }
+
+        function calculateResults(regularResults, hungerResults, difficulty) {
+            let successes = 0;
+            let criticals = 0;
+            let messyCritical = false;
+            let bestialFailure = false;
+
+            regularResults.forEach(value => {
+                if (value >= 6) successes++;
+                if (value === 10) criticals++;
+            });
+
+            hungerResults.forEach(value => {
+                if (value >= 6) successes++;
+                if (value === 10) {
+                    criticals++;
+                    messyCritical = true;
+                }
+                if (value === 1) bestialFailure = true;
+            });
+
+            const criticalPairs = Math.floor(criticals / 2);
+            successes += criticalPairs * 2;
+
+            const win = successes >= difficulty;
+            const criticalWin = win && criticalPairs > 0;
+
+            return {
+                successes,
+                win,
+                criticalWin,
+                messyCritical: criticalWin && messyCritical,
+                bestialFailure: !win && bestialFailure
+            };
+        }
+
+        function getRandomDiceImage(isHunger) {
+    const images = isHunger ? Object.values(hungerDiceImages) : Object.values(regularDiceImages);
+    return images[Math.floor(Math.random() * images.length)];
+}
+
+function animateSingleDie(die, finalImage, duration) {
+    return new Promise(resolve => {
+        const startTime = performance.now();
+        const animate = (currentTime) => {
+            const elapsedTime = currentTime - startTime;
+            if (elapsedTime < duration) {
+                die.style.backgroundImage = `url('${getRandomDiceImage(die.classList.contains('hunger-die'))}')`;
+                requestAnimationFrame(animate);
+            } else {
+                die.style.backgroundImage = `url('${finalImage}')`;
+                resolve();
+            }
+        };
+        requestAnimationFrame(animate);
+    });
+}
+
+function animateDice(diceContainer, regularResults, hungerResults) {
+    diceContainer.innerHTML = '';
+    const allDice = [...regularResults.map(value => ({value, isHunger: false})), 
+                     ...hungerResults.map(value => ({value, isHunger: true}))];
+    
+    const diceElements = allDice.map(die => {
+        const dieElement = document.createElement('div');
+        dieElement.className = `die ${die.isHunger ? 'hunger-die' : 'regular-die'}`;
+        diceContainer.appendChild(dieElement);
+        return {element: dieElement, value: die.value, isHunger: die.isHunger};
+    });
+
+    const animationPromises = diceElements.map(die => 
+        animateSingleDie(die.element, getDiceImage(die.value, die.isHunger), 1000 + Math.random() * 500)
+    );
+
+    return Promise.all(animationPromises);
+}
+
+document.getElementById('rollButton').addEventListener('click', () => {
+    const regularDice = parseInt(document.getElementById('regularDice').value);
+    const hungerDice = parseInt(document.getElementById('hungerDice').value);
+    const difficulty = parseInt(document.getElementById('difficulty').value);
+
+    const regularResults = Array.from({length: regularDice}, rollDie);
+    const hungerResults = Array.from({length: hungerDice}, rollDie);
+
+    const diceContainer = document.getElementById('diceContainer');
+    
+    animateDice(diceContainer, regularResults, hungerResults).then(() => {
+        const results = calculateResults(regularResults, hungerResults, difficulty);
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = `
+            <div class="result-item">Successes: ${results.successes}</div>
+            <div class="result-item ${results.win ? 'success' : 'failure'}">${results.win ? 'Win' : 'Fail'}</div>
+            ${results.criticalWin ? 
+                (results.messyCritical ? 
+                    '<div class="result-item messy">Messy Critical</div>' : 
+                    '<div class="result-item critical">Critical Win</div>'
+                ) : ''
+            }
+            ${results.bestialFailure ? '<div class="result-item bestial">Bestial Failure</div>' : ''}
+        `;
+    });
+});
+    </script>
+</body>
+</html>
