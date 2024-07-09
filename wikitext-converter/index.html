@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WikiText to Markdown Converter - Modern MacOS Style</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Cactus+Classical+Serif&family=Raleway:wght@400;700&family=Ubuntu:wght@400;700&family=Merriweather:wght@400;700&family=Bebas+Neue&family=Courgette&family=Julee&family=Lemonada:wght@400;700&family=Vollkorn:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>WikiText to Markdown Converter</h1>
+        </header>
+        <div class="dark-mode-toggle" onclick="document.body.classList.toggle('dark-mode')">
+            <i class="fas fa-moon"></i>
+        </div>
+
+        <main>
+            <div class="pane">
+                <div class="pane-header">WikiText Input</div>
+                <textarea id="input" placeholder="Paste your WikiText here...">== WikiText Example ==
+
+This is a '''bold''' text in WikiText.
+
+=== Subheading ===
+
+Here's a [[link]] and an external [https://example.com link].
+
+==== Code Example ====
+
+<code>
+    function example() {
+        console.log("Hello, World!");
+    }
+</code>
+
+This is how you use <code>inline code</code> in WikiText.
+
+== WikiText Example ==
+
+This is a '''bold''' text in WikiText.
+
+=== Subheading ===
+
+Here's a [[link]] and an external [https://example.com link].
+
+==== Code Example ====
+
+<syntaxhighlight lang="javascript">
+    function example() {
+        console.log("Hello, World!");
+    }
+</syntaxhighlight>
+
+This is how you use <code>inline code</code> in WikiText.
+
+# Numbered lists are good
+## very organized
+## easy to follow
+
+* Or create mixed lists
+*# and nest them
+*#* like this
+*#*; definitions
+*#*: work:
+*#*; apple
+*#*; banana
+*#*: fruits
+
+= First level list =
+== Header 2 ==
+=== Header 3 ===
+==== Header 4 ====
+===== Header 5 =====
+        ====== Header 6 ======</textarea>
+            </div>
+
+            <div class="pane">
+                <div class="pane-header">Markdown Output</div>
+                <textarea class="preview" id="preview" readonly="true"></textarea>
+            </div>
+        </main>
+
+        <div class="toolbar">
+            <button id="convert">Convert</button>
+            <button id="copy">Copy</button>
+            <button id="download">Download</button>
+            <div id="error-message" class="error-message">
+                <span class="error-text"></span>
+                <button class="close-error">&times;</button>
+            </div>
+        </div>
+
+        <footer>
+            Ultimate Converter Tool © 2023 | <a href="./">About</a> | <a href="./">API</a> | <a href="./">Privacy</a>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>
