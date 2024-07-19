@@ -1,0 +1,7 @@
+[
+  {
+    "AllowedOrigins": ["https://lobechat.heltonteixeira.com"],
+    "AllowedMethods": ["GET", "PUT", "HEAD", "POST", "DELETE"],
+    "AllowedHeaders": ["*"]
+  }
+]
