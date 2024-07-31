@@ -51,4 +51,8 @@ This project is open-source and available under the [MIT License](../LICENSE).
 
 ## Acknowledgements
 
+<<<<<<< HEAD
 This project uses [ExifReader](https://github.com/mattiasw/ExifReader) (or similar library - please confirm the actual library used) for parsing EXIF data from PNG files.
+=======
+This project uses [ExifReader](https://github.com/mattiasw/ExifReader) (or similar library - please confirm the actual library used) for parsing EXIF data from PNG files.
+>>>>>>> baaef3c02422b3f9db8ede3583cab5e0cbda812c
