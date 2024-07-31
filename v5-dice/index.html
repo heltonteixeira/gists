@@ -4,41 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vampire Dice Roller</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
-<body>
+<body class="light-theme">
+    <button id="themeToggle" class="button is-small theme-toggle">
+        <span class="icon">
+            <i class="mdi mdi-theme-light-dark"></i>
+        </span>
+    </button>
     <div class="container">
-        <h1>Vampire: The Masquerade Dice Roller</h1>
+        <h1 class="title is-2 has-text-centered">Vampire: The Masquerade Dice Roller</h1>
         <div class="inputs">
-            <div>
-                <label for="regular-dice">Regular Dice:</label>
-                <input type="number" id="regular-dice" min="0" value="0">
+            <div class="field">
+                <label class="label" for="regular-dice">Regular Dice:</label>
+                <div class="control">
+                    <input class="input" type="number" id="regular-dice" min="0" value="3">
+                </div>
             </div>
-            <div>
-                <label for="hunger-dice">Hunger Dice:</label>
-                <input type="number" id="hunger-dice" min="0" max="5" value="0">
+            <div class="field">
+                <label class="label" for="hunger-dice">Hunger Dice:</label>
+                <div class="control">
+                    <input class="input" type="number" id="hunger-dice" min="0" max="5" value="1">
+                </div>
             </div>
-            <div>
-                <label for="difficulty">Difficulty:</label>
-                <input type="number" id="difficulty" min="1" value="3">
+            <div class="field">
+                <label class="label" for="difficulty">Difficulty:</label>
+                <div class="control">
+                    <input class="input" type="number" id="difficulty" min="1" value="3">
+                </div>
             </div>
         </div>
-        <button id="roll-button">Roll Dice</button>
+        <div class="field">
+            <div class="control">
+                <button id="roll-button" class="button is-fullwidth">Roll Dice</button>
+            </div>
+        </div>
         <div class="results" id="results">
-            <h2>Results</h2>
+            <h2 class="subtitle">Results</h2>
             <div class="dice-container" id="dice-results"></div>
             <p id="outcome"></p>
         </div>
-        <div class="preload-images">
-            <img src="https://imgur.com/x0rDGlG.png" alt="preload">
-            <img src="https://imgur.com/DConmlW.png" alt="preload">
-            <img src="https://imgur.com/AByS1LP.png" alt="preload">
-            <img src="https://imgur.com/WDpzkkt.png" alt="preload">
-            <img src="https://imgur.com/ws5Nxzw.png" alt="preload">
-            <img src="https://imgur.com/cR5OSSs.png" alt="preload">
-            <img src="https://imgur.com/UrbEja2.png" alt="preload">
-        </div>
     </div>
-    <script src="script.js"></script>
+    <script src="./script.js"></script>
 </body>
 </html>

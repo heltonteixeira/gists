@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <title>Prompto</title>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap'><link rel="stylesheet" href="./style.css">
+    
+</head>
+<body>
+    <!-- partial:index.partial.html -->
+    <div class="main-container">
+        <div class="header">
+          <h1>Prompto!</h1>
+          <p>Create a prompt with different recipes.</p>
+        </div>
+        <div class="tabs">
+          <button class="tab-button active" data-category="people">People</button>
+          <button class="tab-button" data-category="nature">Nature</button>
+          <button class="tab-button" data-category="still-life">Still Life</button>
+          <select id="data-select">
+            <option value="default">Default Data</option>
+            <option value="alternative">Alternative Data</option>
+          </select>
+        </div>
+        <div class="controls-container">
+          <div class="controls" data-category="people">
+            <!-- ay dios mio -->
+          </div>
+          <div class="coming-soon" data-category="nature">
+            <p>Coming soon</p>
+          </div>
+          <div class="coming-soon" data-category="still-life">
+            <p>Coming soon</p>
+          </div>
+        </div>
+        <div class="output-container">
+          <div class="output">
+            <input type="text" id="prompt-output" readonly />
+            <button id="randomize-btn"><i class="ph ph-shuffle"></i></button>
+            <button id="copy-btn"><i class="ph ph-copy"></i></button>
+          </div>
+        </div>
+        <div id="toast" class="toast">Copied</div>
+      </div>
+      <div class="footer">
+        <!-- Credits to Pablo Stanley who created and shared it original idea. Original post where he shared it https://x.com/pablostanley/status/1814735683673804937. Code Pen with the code https://codepen.io/pablostanley/full/MWMYBZN -->
+        <p>Shoutout to Pablo Stanley for the OG Prompto idea! 🙌</p>
+        <p>Check out his <a href="https://x.com/pablostanley/status/1814735683673804937" target="_blank" rel="noopener noreferrer">original post</a> and the <a href="https://codepen.io/pablostanley/full/MWMYBZN" target="_blank" rel="noopener noreferrer">CodePen</a> that started it all.</p>
+      </div>
+      
+    <!-- partial -->
+    <script src='https://unpkg.com/phosphor-icons'></script>
+    <script src='./data/data.js'></script><script  src="./script.js"></script>
+    
+</body>
+</html>

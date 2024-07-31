@@ -1,100 +1,137 @@
-const regularDiceImages = {
-    '1-5': 'https://imgur.com/x0rDGlG.png',
-    '6-9': 'https://imgur.com/DConmlW.png',
-    '10': 'https://imgur.com/AByS1LP.png'
+// Constants
+const ANIMATION_DURATION = 1000;
+const ANIMATION_INTERVAL = 100;
+
+const DICE_IMAGES = {
+    regular: {
+        '1-5': './images/drf.png',  // Regular Failure
+        '6-9': './images/drs.png',  // Regular Success
+        '10': './images/drc.png'    // Regular Critical
+    },
+    hunger: {
+        '1': './images/dhbf.png',   // Hunger Bestial Failure
+        '2-5': './images/dhf.png',  // Hunger Failure
+        '6-9': './images/dhs.png',  // Hunger Success
+        '10': './images/dgmc.png'   // Hunger Messy Critical
+    }
 };
 
-const hungerDiceImages = {
-    '1': 'https://imgur.com/WDpzkkt.png',
-    '2-5': 'https://imgur.com/ws5Nxzw.png',
-    '6-9': 'https://imgur.com/cR5OSSs.png',
-    '10': 'https://imgur.com/UrbEja2.png'
+// Utility functions
+const rollDie = () => Math.floor(Math.random() * 10) + 1;
+
+const getImageForResult = (result, isHunger) => {
+    const diceType = isHunger ? 'hunger' : 'regular';
+    if (isHunger) {
+        if (result === 1) return DICE_IMAGES[diceType]['1'];
+        if (result >= 2 && result <= 5) return DICE_IMAGES[diceType]['2-5'];
+        if (result >= 6 && result <= 9) return DICE_IMAGES[diceType]['6-9'];
+        return DICE_IMAGES[diceType]['10'];
+    } else {
+        if (result >= 1 && result <= 5) return DICE_IMAGES[diceType]['1-5'];
+        if (result >= 6 && result <= 9) return DICE_IMAGES[diceType]['6-9'];
+        return DICE_IMAGES[diceType]['10'];
+    }
 };
 
-document.getElementById('roll-button').addEventListener('click', () => {
-    const regularDiceCount = parseInt(document.getElementById('regular-dice').value);
-    const hungerDiceCount = parseInt(document.getElementById('hunger-dice').value);
-    const difficulty = parseInt(document.getElementById('difficulty').value);
-    const resultsContainer = document.getElementById('results');
-    const diceResultsContainer = document.getElementById('dice-results');
-    const outcomeContainer = document.getElementById('outcome');
+const animateDie = (dieElement, isHunger) => {
+    const interval = setInterval(() => {
+        const result = rollDie();
+        const imageUrl = getImageForResult(result, isHunger);
+        dieElement.style.backgroundImage = `url('${imageUrl}')`;
+    }, ANIMATION_INTERVAL);
+    return interval;
+};
 
-    diceResultsContainer.innerHTML = '';
+const createDieElement = (result, isHunger) => {
+    const dieElement = document.createElement('div');
+    dieElement.className = `dice ${isHunger ? 'hunger-die' : 'regular-die'}`;
+    const imageUrl = getImageForResult(result, isHunger);
+    dieElement.style.backgroundImage = `url('${imageUrl}')`;
+    return dieElement;
+};
 
-    const rollDie = () => Math.floor(Math.random() * 10) + 1;
+// Core game logic
+class VampireDiceRoller {
+    constructor() {
+        this.resultsContainer = document.getElementById('results');
+        this.diceResultsContainer = document.getElementById('dice-results');
+        this.outcomeContainer = document.getElementById('outcome');
+        this.rollButton = document.getElementById('roll-button');
+        this.regularDiceInput = document.getElementById('regular-dice');
+        this.hungerDiceInput = document.getElementById('hunger-dice');
+        this.difficultyInput = document.getElementById('difficulty');
 
-    const rollDice = (count) => {
-        const results = [];
-        for (let i = 0; i < count; i++) {
-            results.push(rollDie());
-        }
-        return results;
-    };
+        this.rollButton.addEventListener('click', () => this.rollDice());
+    }
 
-    const getImageForResult = (result, isHunger) => {
-        if (isHunger) {
-            if (result === 1) return hungerDiceImages['1'];
-            if (result >= 2 && result <= 5) return hungerDiceImages['2-5'];
-            if (result >= 6 && result <= 9) return hungerDiceImages['6-9'];
-            return hungerDiceImages['10'];
-        } else {
-            if (result >= 1 && result <= 5) return regularDiceImages['1-5'];
-            if (result >= 6 && result <= 9) return regularDiceImages['6-9'];
-            return regularDiceImages['10'];
-        }
-    };
+    rollDice() {
+        const regularDiceCount = parseInt(this.regularDiceInput.value);
+        const hungerDiceCount = parseInt(this.hungerDiceInput.value);
+        const difficulty = parseInt(this.difficultyInput.value);
 
-    const animateDice = (dieElement, isHunger) => {
-        const interval = setInterval(() => {
-            const result = rollDie();
-            dieElement.style.backgroundImage = `url(${getImageForResult(result, isHunger)})`;
-        }, 100);
+        this.diceResultsContainer.innerHTML = '';
+        const diceResults = this.generateDiceResults(regularDiceCount, hungerDiceCount);
+        const animationPromises = this.animateDiceRolls(diceResults);
 
-        return interval;
-    };
+        Promise.all(animationPromises).then(() => {
+            this.displayFinalResults(diceResults, difficulty);
+        });
+    }
 
-    const animationDuration = 1000;
+    generateDiceResults(regularCount, hungerCount) {
+        return [
+            ...Array(regularCount).fill().map(() => ({ result: rollDie(), isHunger: false })),
+            ...Array(hungerCount).fill().map(() => ({ result: rollDie(), isHunger: true }))
+        ];
+    }
 
-    const intervals = [];
-    const diceResults = rollDice(regularDiceCount + hungerDiceCount);
-    diceResults.forEach((die, index) => {
-        const dieElement = document.createElement('div');
-        dieElement.className = 'dice';
-        diceResultsContainer.appendChild(dieElement);
+    animateDiceRolls(diceResults) {
+        return diceResults.map(({ isHunger }) => {
+            const dieElement = createDieElement(rollDie(), isHunger);
+            this.diceResultsContainer.appendChild(dieElement);
 
-        const interval = animateDice(dieElement, index >= regularDiceCount);
-        intervals.push({ interval, dieElement, die, isHunger: index >= regularDiceCount });
-    });
+            return new Promise(resolve => {
+                const interval = animateDie(dieElement, isHunger);
+                setTimeout(() => {
+                    clearInterval(interval);
+                    resolve(dieElement);
+                }, ANIMATION_DURATION);
+            });
+        });
+    }
 
-    setTimeout(() => {
-        intervals.forEach(({ interval, dieElement, die, isHunger }) => {
-            clearInterval(interval);
-            dieElement.style.backgroundImage = `url(${getImageForResult(die, isHunger)})`;
+    displayFinalResults(diceResults, difficulty) {
+        diceResults.forEach(({ result, isHunger }, index) => {
+            const dieElement = this.diceResultsContainer.children[index];
+            const imageUrl = getImageForResult(result, isHunger);
+            dieElement.style.backgroundImage = `url('${imageUrl}')`;
         });
 
-        let successes = 0;
-        let criticals = 0;
-        let messyCriticals = 0;
-        let bestialFailures = 0;
-        let hungerCriticals = 0;
+        const { successes, criticals, messyCriticals, bestialFailures } = this.calculateResults(diceResults);
+        const outcomeText = this.generateOutcomeText(successes, criticals, messyCriticals, bestialFailures, difficulty);
+        this.outcomeContainer.innerHTML = `<strong>${outcomeText}</strong>`;
+    }
 
-        diceResults.forEach((die, index) => {
-            if (die >= 6) successes++;
-            if (die === 10) {
+    calculateResults(diceResults) {
+        let successes = 0, criticals = 0, messyCriticals = 0, bestialFailures = 0;
+
+        diceResults.forEach(({ result, isHunger }) => {
+            if (result >= 6) successes++;
+            if (result === 10) {
                 criticals++;
-                if (index >= regularDiceCount) {
-                    hungerCriticals++;
-                    messyCriticals++;
-                }
+                if (isHunger) messyCriticals++;
             }
-            if (index >= regularDiceCount && die === 1) bestialFailures++;
+            if (isHunger && result === 1) bestialFailures++;
         });
 
         successes += Math.floor(criticals / 2) * 2;
+        return { successes, criticals, messyCriticals, bestialFailures };
+    }
 
-        let outcomeText = `# Successes: ${successes}`;
+    generateOutcomeText(successes, criticals, messyCriticals, bestialFailures, difficulty) {
+        let outcomeText = `Successes: ${successes}`;
         if (successes >= difficulty) {
-            if (hungerCriticals > 0 && criticals >= 2) {
+            if (messyCriticals > 0 && criticals >= 2) {
                 outcomeText += ' - Messy Critical';
             } else if (criticals >= 2) {
                 outcomeText += ' - Critical Success';
@@ -108,7 +145,38 @@ document.getElementById('roll-button').addEventListener('click', () => {
                 outcomeText += ' - Fail';
             }
         }
+        return outcomeText;
+    }
+}
 
-        outcomeContainer.innerHTML = `<strong>${outcomeText}</strong>`;
-    }, animationDuration);
+// Theme functionality
+class ThemeManager {
+    constructor() {
+        this.themeToggle = document.getElementById('themeToggle');
+        this.themeToggle.addEventListener('click', () => this.toggleTheme());
+        this.loadTheme();
+    }
+
+    setTheme(theme) {
+        document.body.className = theme;
+        localStorage.setItem('theme', theme);
+    }
+
+    loadTheme() {
+        const savedTheme = localStorage.getItem('theme') || 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-theme' : 'light-theme');
+        this.setTheme(savedTheme);
+    }
+
+    toggleTheme() {
+        const currentTheme = document.body.className;
+        const newTheme = currentTheme === 'light-theme' ? 'dark-theme' : 'light-theme';
+        this.setTheme(newTheme);
+    }
+}
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', () => {
+    new VampireDiceRoller();
+    new ThemeManager();
 });
