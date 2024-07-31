@@ -2,65 +2,74 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>New Haven Time Widget</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .widget-container {
-            font-size: 28px;
-        }
-        .widget-container a, .widget-container span {
-            font-size: 28px;
-        }
-        .time, .sun {
-            display: block;
-            margin: 10px 0;
-        }
-        .widget-container a {
-            text-decoration: underline dotted;
-            color: inherit; /* Match the text color */
-        }
-        /* Light theme */
-        @media (prefers-color-scheme: light) {
-            body {
-                background-color: #ffffff;
-                color: #000000;
-            }
-        }
-        /* Dark theme */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #191919;
-                color: #ffffff;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="widget-container">
         <div class="time">
-            <a href="https://time.is/New_Haven,_Connecticut" id="time_is_link" rel="nofollow">Time in New Haven:</a>
-            <span id="New_Haven__Connecticut_z161"></span>
+            <a href="https://time.is/New_Haven,_Connecticut" id="time_is_link" rel="nofollow" class="location drip-link">New Haven:
+                <div class="drip-container">
+                    <svg class="blood-drop" viewBox="0 0 10 20">
+                        <path d="M5 0 Q 2.5 5 2.5 10 A 2.5 2.5 0 1 0 7.5 10 Q 7.5 5 5 0" fill="url(#bloodGradient)">
+                            <animate attributeName="d" 
+                                dur="2s"
+                                repeatCount="indefinite"
+                                values="
+                                    M5 0 Q 2.5 5 2.5 10 A 2.5 2.5 0 1 0 7.5 10 Q 7.5 5 5 0;
+                                    M5 0 Q 2 7 2 12 A 3 3 0 1 0 8 12 Q 8 7 5 0;
+                                    M5 0 Q 2.5 5 2.5 10 A 2.5 2.5 0 1 0 7.5 10 Q 7.5 5 5 0"
+                            />
+                        </path>
+                        <defs>
+                            <linearGradient id="bloodGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#8b0000;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#660303;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <svg class="blood-drop" viewBox="0 0 10 20">
+                        <use href="#drop" />
+                    </svg>
+                    <svg class="blood-drop" viewBox="0 0 10 20">
+                        <use href="#drop" />
+                    </svg>
+                    <svg class="blood-drop" viewBox="0 0 10 20">
+                        <use href="#drop" />
+                    </svg>
+                    <svg class="blood-drop" viewBox="0 0 10 20">
+                        <use href="#drop" />
+                    </svg>
+                </div>
+            </a>
+            <svg width="0" height="0">
+                <defs>
+                    <g id="drop">
+                        <path d="M5 0 Q 2.5 5 2.5 10 A 2.5 2.5 0 1 0 7.5 10 Q 7.5 5 5 0" fill="url(#bloodGradient)">
+                            <animate attributeName="d" 
+                                dur="2s"
+                                repeatCount="indefinite"
+                                values="
+                                    M5 0 Q 2.5 5 2.5 10 A 2.5 2.5 0 1 0 7.5 10 Q 7.5 5 5 0;
+                                    M5 0 Q 2 7 2 12 A 3 3 0 1 0 8 12 Q 8 7 5 0;
+                                    M5 0 Q 2.5 5 2.5 10 A 2.5 2.5 0 1 0 7.5 10 Q 7.5 5 5 0"
+                            />
+                        </path>
+                    </g>
+                </defs>
+            </svg>
+            <span id="New_Haven__Connecticut_z161" class="locationIs"></span>
         </div>
         <div class="sun">
-            <span id="New_Haven__Connecticut_z161_sun"></span>
+            Sunrise: <span id="New_Haven__Connecticut_z161_sun" class="sunIs"></span>
+        </div>
+        <div class="sunset">
+            Sunset: <span id="New_Haven__Connecticut_z161_sunset" class="sunsetIs"></span>
         </div>
     </div>
-    <script src="//widget.time.is/en.js"></script>
-    <script>
-        time_is_widget.init({
-            New_Haven__Connecticut_z161: {
-                template: "TIME",
-                time_format: "hours:minutes",
-                coords: "41.3081500,-72.9281600"
-            },
-            New_Haven__Connecticut_z161_sun: {
-                template: "SUN",
-                sun_format: "Sunrise: srhour:srminute Sunset: sshour:ssminute",
-                coords: "41.3081500,-72.9281600"
-            }
-        });
-    </script>
+    <script src="https://widget.time.is/en.js"></script>
+    <script src="./script.js"></script>
+
 </body>
 </html>

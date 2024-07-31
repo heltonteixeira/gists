@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PNG Metadata and EXIF Data Viewer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <section class="hero is-primary is-bold">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title has-text-centered is-size-2 has-text-weight-bold">PNG Metadata and EXIF Data Viewer</h1>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <div class="drag-area" id="dropZone">
+                <span class="icon is-large">
+                    <i class="fas fa-upload fa-3x"></i>
+                </span>
+                <p class="is-size-5 has-text-weight-semibold mt-3">Drop your PNG file here or click to select</p>
+                <p class="is-size-7 mt-2 has-text-grey">Supports PNG files only</p>
+                <input type="file" id="fileInput" accept=".png" style="display: none;">
+            </div>
+            
+            <div id="errorAlert" class="notification is-danger mt-4" style="display: none;"></div>
+            
+            <div class="columns is-multiline mt-4">
+                <div class="column is-half-desktop is-full-tablet" id="imagePreviewColumn" style="display: none;">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">Image Preview</p>
+                        </header>
+                        <div class="card-content p-0">
+                            <img id="imagePreview" src="" alt="Preview" class="preview-image">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="column is-half-desktop is-full-tablet" id="metadataColumn" style="display: none;">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">Metadata</p>
+                            <button id="copyButton" class="button is-small mr-2 mt-2">
+                                <span class="icon">
+                                    <i class="fas fa-copy"></i>
+                                </span>
+                                <span>Copy Prompt & Parameters</span>
+                            </button>
+                        </header>
+                        <div class="card-content">
+                            <div id="metadata"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="modal" id="enlargedImageModal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <img id="enlargedImage" src="" alt="Enlarged Preview">
+        </div>
+        <button class="modal-close is-large" aria-label="close" id="closeModal"></button>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>

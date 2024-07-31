@@ -1,0 +1,145 @@
+/* styles.css */
+
+:root {
+    --primary-color: #00d1b2;
+    --secondary-color: #3273dc;
+    --background-color: #f5f5f5;
+    --card-background: #ffffff;
+    --text-color: #4a4a4a;
+    --border-radius: 6px;
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-color);
+}
+
+.hero {
+    background-image: linear-gradient(141deg, #009e6c 0%, var(--primary-color) 71%, #00e7eb 100%);
+}
+
+.hero .title {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.drag-area {
+    border: 2px dashed var(--primary-color);
+    border-radius: var(--border-radius);
+    padding: 3rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background-color: var(--card-background);
+}
+
+.drag-area:hover {
+    background-color: #f0f0f0;
+}
+
+.drag-area .icon {
+    color: var(--primary-color);
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.card:hover {
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.card-header-title {
+    font-size: 1.1rem;
+}
+
+.preview-image {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.preview-image:hover {
+    opacity: 0.8;
+}
+
+#metadata, #exifData {
+    max-height: 400px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+}
+
+.metadata-item, .exif-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e0e0e0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space:nowrap;
+  
+}
+
+.metadata-item:last-child, .exif-item:last-child {
+    border-bottom: none;
+}
+
+.metadata-key, .exif-key {
+    font-weight: bold;
+    margin-right: 1rem;
+}
+
+.metadata-value {
+    min-width: 0;
+    overflow: hidden;
+    text-wrap: nowrap;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+}
+
+#enlargedImage {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+#copyExifButton {
+    background-color: var(--secondary-color);
+    border-color: transparent;
+    color: white;
+}
+
+#copyExifButton:hover {
+    background-color: darken(var(--secondary-color), 5%);
+}
+
+@media screen and (max-width: 768px) {
+    .drag-area {
+        padding: 2rem;
+    }
+
+    .card-header-title {
+        font-size: 1rem;
+    }
+
+    #copyExifButton {
+        font-size: 0.75rem;
+    }
+}

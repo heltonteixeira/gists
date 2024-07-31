@@ -1,0 +1,124 @@
+:root {
+  --accent-color: crimson;
+  --dice-height: 8vh;
+  --dice-width: calc(var(--dice-height) - 1.2%);
+  --light-background-color: #f5f5f5;
+  --light-alt-background-color: #ffffff;
+  --light-color: #4a4a4a;
+  --dark-background-color: #1a1a1a;
+  --dark-alt-background-color: #2c2c2c;
+  --dark-color: #f5f5f5;
+  --dark-input-color: #363636;
+  --dark-border-color: #4a4a4a;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 600px !important;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  color: var(--accent-color);
+  margin-bottom: 2rem;
+}
+
+.inputs {
+  margin-bottom: 2rem;
+}
+
+.input {
+  margin-bottom: 1rem;
+}
+
+.button {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: var(--light-alt-background-color);
+  transition: opacity 0.3s ease;
+  font-weight: 500;
+}
+
+.button:hover, button:active {
+  opacity: 0.8;
+}
+
+.results {
+  margin-top: 2rem;
+}
+
+.dice-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  place-content: center;
+}
+
+.dice {
+  width: var(--dice-width);
+  height: var(--dice-height);
+  background-size: cover;
+  border-radius: 4px;
+}
+
+#outcome {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+/* Light theme */
+body.light-theme {
+  background-color: var(--light-background-color);
+  color: var(--light-color);
+}
+
+body.light-theme .container {
+  background-color: var(--light-alt-background-color);
+}
+
+/* Dark theme */
+body.dark-theme {
+  background-color: var(--dark-background-color);
+  color: var(--dark-color);
+}
+
+body.dark-theme .subtitle, body.dark-theme #outcome strong {
+    color: var(--dark-color);
+}
+
+body.dark-theme .container {
+    background-color: var(--dark-alt-background-color);
+}
+
+body.dark-theme .input {
+  background-color: var(--dark-input-color);
+  color: var(--dark-color);
+  border-color: var(--dark-border-color);
+}
+
+body.dark-theme .label {
+  color: var(--dark-color);
+}
+
+body.dark-theme button:hover, body.dark-theme button:active, body.dark-theme button:focus {
+    background-color: var(--accent-color);
+    color: var(--dark-color); 
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
