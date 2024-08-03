@@ -5,6 +5,7 @@ This widget displays the current time, sunrise time, and sunset time for New Hav
 ## Overview
 
 The Sunrise Widget is a simple web-based tool that shows:
+
 - Current time
 - Sunrise time
 - Sunset time

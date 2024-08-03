@@ -32,7 +32,22 @@ document.addEventListener("DOMContentLoaded", () => {
   elements.fileInput.addEventListener("change", handleFileSelect);
   elements.enlargedImageModal.addEventListener("click", handleModalClick);
   elements.copyButton.addEventListener("click", handleCopyClick);
+  document.addEventListener('paste', handlePaste);
 });
+
+// Handle Paste (CTRL+V) Event
+function handlePaste(e) {
+  e.preventDefault();
+  const items = e.clipboardData.items;
+
+  for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+          const blob = items[i].getAsFile();
+          handleFile(blob);
+          break;  // Only handle the first image if multiple are pasted
+      }
+  }
+}
 
 // Event Handlers
 const handleDragOver = (e) => {

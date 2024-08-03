@@ -106,12 +106,17 @@ body {
     text-overflow: ellipsis;
 }
 
+.modal-card, .modal-content {
+    overflow: hidden;
+}
+
 .modal-content {
     max-width: 90%;
     max-height: 90%;
     background-color: var(--card-background);
     border-radius: var(--border-radius);
     padding: 1rem;
+    max-width: fit-content;
 }
 
 #enlargedImage {
