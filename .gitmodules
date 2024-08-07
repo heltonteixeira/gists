@@ -1,4 +1,0 @@
-[submodule "bookmark-manager"]
-	path = bookmark-manager
-	url = https://github.com/heltonteixeira/bookmark-manager.git
-
