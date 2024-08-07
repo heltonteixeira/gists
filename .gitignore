@@ -19,3 +19,8 @@ Gemfile.lock
 
 # Specific ignor for Git Config file
 .gitconfig
+
+# Certificate Keys
+*.pem
+cert.pem
+key.pem

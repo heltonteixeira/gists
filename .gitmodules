@@ -1,0 +1,3 @@
+[submodule "bookmark-manager"]
+	path = bookmark-manager
+	url = ./bookmark-manager
