@@ -153,23 +153,25 @@ class VampireDiceRoller {
 class ThemeManager {
     constructor() {
         this.themeToggle = document.getElementById('themeToggle');
-        this.themeToggle.addEventListener('click', () => this.toggleTheme());
+        this.themeToggle.addEventListener('click', this.toggleTheme.bind(this));
         this.loadTheme();
     }
 
     setTheme(theme) {
-        document.body.className = theme;
+        document.body.classList.remove('light-theme', 'dark-theme');
+        document.body.classList.add(theme);
         localStorage.setItem('theme', theme);
     }
 
     loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 
-            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-theme' : 'light-theme');
-        this.setTheme(savedTheme);
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const defaultTheme = prefersDarkScheme ? 'dark-theme' : 'light-theme';
+        this.setTheme(savedTheme || defaultTheme);
     }
 
     toggleTheme() {
-        const currentTheme = document.body.className;
+        const currentTheme = document.body.classList.contains('light-theme') ? 'light-theme' : 'dark-theme';
         const newTheme = currentTheme === 'light-theme' ? 'dark-theme' : 'light-theme';
         this.setTheme(newTheme);
     }

@@ -14,6 +14,10 @@ Welcome to my GitHub page! Here you'll find a collection of projects I've been w
   - [View Project](./png-exif-viewer/)
 - **Prompto** - A prompt management tool for AI conversations.
   - [View Project](./prompto/)
+- **Bookmarks** - A basic bookmark implementation using brutalist style.
+  - [View Project](./bookmarks/)
+- **Format-Converter** - Tool to convert Markdown to HTML, and HTML to PDF.
+  - [View Project](./format-converter/)
 
 ## Contact
 
