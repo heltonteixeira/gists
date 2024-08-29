@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrintFriend.ly - Markdown to HTML Converter</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  </head>
+<body>
+  <header>
+    <h1>PrintFriend.ly</h1>
+    <p>Convert Markdown to HTML</p>
+    <nav>
+      <a href="index.html" class="nav-link">HTML to PDF</a>
+      <a href="markdown-converter.html" class="nav-link active">Markdown to HTML</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="column">
+      <h2><i class="fab fa-markdown"></i> Your Markdown</h2>
+      <textarea id="markdownInput" placeholder="Enter your Markdown here..."></textarea>
+    </div>
+    <div class="column">
+      <div class="tabs">
+        <button class="tab-button active" onclick="showTab(event, 'preview')">Preview</button>
+        <button class="tab-button" onclick="showTab(event, 'rawHtml')">Raw HTML</button>
+        <button class="tab-button" onclick="showTab(event, 'customize')">Customize</button>
+      </div>
+      <div id="preview" class="tab-content">
+        <h2><i class="fas fa-search"></i> Live Preview</h2>
+        <div id="previewContent"></div>
+      </div>
+      <div id="rawHtml" class="tab-content" style="display: none;">
+        <h2><i class="fas fa-code"></i> Raw HTML</h2>
+        <pre id="rawHtmlContent"></pre>
+        <button id="copyHtmlButton" class="button" onclick="copyRawHtml()"><i class="fas fa-copy"></i> Copy HTML</button>
+      </div>
+      <div id="customize" class="tab-content" style="display: none;">
+        <h2><i class="fas fa-paint-brush"></i> Customize</h2>
+        <p>Placeholder text for customization options. To be implemented later.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    Crafted with <i class="fas fa-heart"></i> by <a href="https://printfriend.ly">PrintFriend.ly</a>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.3/marked.min.js"></script>
+  <script src="./markdown-converter.js"></script>
+</body>
+</html>
