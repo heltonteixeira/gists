@@ -18,7 +18,7 @@ const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
 // Server URLs
 const serverUrl = ['localhost', '127.0.0.1'].includes(window.location.hostname)
     ? 'http://localhost:5783'
-    : 'https://festive-silk-danger.glitch.me';
+    : 'https://your-glitch-project-name.glitch.me';
 
 
 // console.log('Using server URL:', serverUrl);
