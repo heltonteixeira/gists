@@ -13,25 +13,49 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const app = express();
-const port = process.env.PORT || 5783;
-const maxFileSize = 50 * 1024 * 1024; // 50 MB
+const port = process.env.PORT || 3000;
+const maxFileSize = process.env.MAX_FILE_SIZE || 50 * 1024 * 1024; // 50 MB
+
+console.log('Starting server with configuration:', {
+    NODE_ENV: process.env.NODE_ENV,
+    PORT: port,
+    MAX_FILE_SIZE: maxFileSize,
+    CLIENT_DOMAIN: process.env.CLIENT_DOMAIN,
+    GITHUB_PAGES_DOMAIN: process.env.GITHUB_PAGES_DOMAIN
+});
 
 ffmpeg.setFfmpegPath(ffmpegPath);
+console.log('FFmpeg path:', ffmpegPath);
 
 // CORS configuration
 const corsOptions = {
-    origin: (origin, callback) => {
+    origin: function (origin, callback) {
         const allowedOrigins = [process.env.CLIENT_DOMAIN, process.env.GITHUB_PAGES_DOMAIN];
-        if (!origin || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+        console.log('Received request from origin:', origin);
+        console.log('Allowed origins:', allowedOrigins);
+
+        if (process.env.NODE_ENV !== 'production') {
+            // In development, allow all origins
+            callback(null, true);
+        } else if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
         }
     },
     methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 };
+
 app.use(cors(corsOptions));
+
+// Debugging middleware
+app.use((req, res, next) => {
+    console.log(`Received ${req.method} request for ${req.url}`);
+    console.log('Headers:', req.headers);
+    next();
+});
 
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
@@ -141,7 +165,10 @@ async function deleteFile(filePath) {
 
 app.post('/convert', upload.single('file'), async (req, res) => {
     console.log('Received conversion request');
+    console.log('Request headers:', req.headers);
+
     if (!req.file) {
+        console.error('No file uploaded');
         return res.status(400).json({ error: 'No file uploaded.' });
     }
 
@@ -157,8 +184,14 @@ app.post('/convert', upload.single('file'), async (req, res) => {
 
     try {
         await fsPromises.access(inputPath, fs.constants.R_OK);
+        console.log('Input file is readable');
+
         await convertToMp3(inputPath, outputPath);
+        console.log('Conversion completed');
+
         const stats = await fsPromises.stat(outputPath);
+        console.log('Output file stats:', stats);
+
         const protocol = req.secure || (req.headers['x-forwarded-proto'] === 'https') ? 'https' : 'http';
         const host = req.get('host');
 
@@ -168,7 +201,7 @@ app.post('/convert', upload.single('file'), async (req, res) => {
             status: 'complete',
             fileName: outputFileName,
             fileSize: stats.size,
-            downloadUrl: `${protocol}://${host}/download/${encodeURIComponent(outputFileName)}`
+            downloadUrl: `https://${host}/download/${encodeURIComponent(outputFileName)}`
         });
     } catch (error) {
         console.error('Conversion error:', error);
@@ -226,9 +259,14 @@ app.get('/download/:filename', async (req, res) => {
         if (error.code === 'ENOENT') {
             res.status(410).json({ error: 'File has expired or does not exist' });
         } else {
-            res.status(500).json({ error: 'An error occurred while accessing the file' });
+            res.status(500).json({ error: 'An error occurred while accessing the file', details: error.message });
         }
     }
+});
+
+app.use((err, req, res, next) => {
+    console.error('Unhandled error:', err);
+    res.status(500).json({ error: 'An unexpected error occurred', details: err.message });
 });
 
 async function startServer() {

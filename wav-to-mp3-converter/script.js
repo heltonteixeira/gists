@@ -21,7 +21,7 @@ const serverUrl = ['localhost', '127.0.0.1'].includes(window.location.hostname)
     : 'https://festive-silk-danger.glitch.me';
 
 
-// console.log('Using server URL:', serverUrl);
+console.log('Using server URL:', serverUrl);
 
 // Event Listeners
 dropZone.addEventListener('dragover', handleDragOver);
@@ -136,17 +136,21 @@ function convertToMp3(file) {
     actionBtn.disabled = true;
     updateStatus('Uploading file...');
 
+    console.log('Sending request to:', `${serverUrl}/convert`); // Add this line for debugging
+
     fetch(`${serverUrl}/convert`, {
         method: 'POST',
         body: formData
     })
         .then(response => {
+            console.log('Received response:', response); // Add this line for debugging
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
+            console.log('Received data:', data); // Add this line for debugging
             if (data.status === 'complete') {
                 updateProgressBar(100, 'conversion');
                 convertedFileInfo = data;
@@ -198,11 +202,8 @@ function downloadConvertedFile() {
         .catch(error => {
             console.error('Download error:', error);
             alert(`An error occurred during the download: ${error.message}`);
-            updateStatus('Download failed.');
-            if (error.message.includes('expired')) {
-                updateStatus('Download period expired. Please convert the file again.');
-                resetState();
-            }
+            updateStatus('Download failed. Please try converting the file again.');
+            resetState();
         });
 }
 
