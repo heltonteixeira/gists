@@ -1,0 +1,12 @@
+{
+    "start": "node server.js",
+    "watch": {
+        "throttle": 1000
+    },
+    "install": {
+        "include": [
+            "^package\\.json$",
+            "^\\.env$"
+        ]
+    }
+}

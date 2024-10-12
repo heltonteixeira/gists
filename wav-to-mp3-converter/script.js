@@ -6,12 +6,12 @@ const fileInfo = document.getElementById('fileInfo');
 const progressBar = document.querySelector('.progress');
 const statusMessage = document.getElementById('statusMessage');
 
-
 let selectedFile = null;
 let convertedFileInfo = null;
 let fakeProgressInterval;
 let uploadProgress = 0;
 let conversionProgress = 0;
+let downloadProgress = 0;
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
 
@@ -20,7 +20,8 @@ const serverUrl = ['localhost', '127.0.0.1'].includes(window.location.hostname)
     ? 'http://localhost:5783'
     : 'https://festive-silk-danger.glitch.me';
 
-console.log('Using server URL:', serverUrl);
+
+// console.log('Using server URL:', serverUrl);
 
 // Event Listeners
 dropZone.addEventListener('dragover', handleDragOver);
@@ -68,6 +69,15 @@ function handleFile(file) {
     }
 }
 
+// Action Button Handler
+function handleActionClick() {
+    if (convertedFileInfo) {
+        downloadConvertedFile();
+    } else if (selectedFile) {
+        convertToMp3(selectedFile);
+    }
+}
+
 // Utility Functions
 function formatFileSize(bytes) {
     if (bytes === 0) return '0 Bytes';
@@ -77,42 +87,47 @@ function formatFileSize(bytes) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-function updateProgressBar(progress) {
+function updateProgressBar(progress, operation) {
+    const progressBar = document.querySelector('.progress');
     progressBar.style.width = `${progress}%`;
     progressBar.textContent = `${Math.round(progress)}%`;
-}
 
-function startFakeProgress() {
-    let progress = 0;
-    updateProgressBar(progress);
-
-    fakeProgressInterval = setInterval(() => {
-        if (progress < 90) {
-            progress += Math.random() * 10;
-            progress = Math.min(progress, 90);
-            updateProgressBar(progress);
-        }
-    }, 500);
-}
-
-// Conversion and Download Functions
-function handleActionClick() {
-    if (convertedFileInfo) {
-        downloadConvertedFile();
-    } else if (selectedFile) {
-        convertToMp3(selectedFile);
+    let statusText = '';
+    switch (operation) {
+        case 'upload':
+            statusText = `Uploading: ${Math.round(progress)}%`;
+            break;
+        case 'conversion':
+            statusText = `Converting: ${Math.round(progress)}%`;
+            break;
+        case 'download':
+            statusText = `Downloading: ${Math.round(progress)}%`;
+            break;
+        default:
+            statusText = `Progress: ${Math.round(progress)}%`;
     }
+    updateStatus(statusText);
 }
 
 function updateStatus(message) {
     statusMessage.textContent = message;
 }
 
-function updateTotalProgress() {
-    const totalProgress = (uploadProgress + conversionProgress) / 2;
-    updateProgressBar(totalProgress);
+function startFakeConversionProgress() {
+    conversionProgress = 0;
+    const interval = setInterval(() => {
+        if (conversionProgress < 90) {
+            conversionProgress += Math.random() * 12;
+            conversionProgress = Math.min(conversionProgress, 90);
+            updateProgressBar(conversionProgress, 'conversion');
+        } else {
+            clearInterval(interval);
+        }
+    }, 1000);
+    return interval;
 }
 
+// Conversion and Download Functions
 function convertToMp3(file) {
     const formData = new FormData();
     formData.append('file', file);
@@ -121,44 +136,33 @@ function convertToMp3(file) {
     actionBtn.disabled = true;
     updateStatus('Uploading file...');
 
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', `${serverUrl}/convert`, true);
-    xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-            uploadProgress = (event.loaded / event.total) * 100;
-            updateTotalProgress();
-        }
-    };
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            const response = JSON.parse(xhr.responseText);
-            if (response.status === 'complete') {
-                clearInterval(fakeProgressInterval);
-                updateProgressBar(100);
-                convertedFileInfo = response;
+    fetch(`${serverUrl}/convert`, {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'complete') {
+                updateProgressBar(100, 'conversion');
+                convertedFileInfo = data;
                 actionBtn.textContent = 'Download MP3';
                 actionBtn.disabled = false;
-                fileInfo.textContent = `Converted: ${response.fileName} (${formatFileSize(response.fileSize)})`;
+                fileInfo.textContent = `Converted: ${data.fileName} (${formatFileSize(data.fileSize)})`;
                 updateStatus('Conversion complete. Ready for download.');
             } else {
-                throw new Error(response.message || 'Conversion failed');
+                throw new Error(data.message || 'Conversion failed');
             }
-        } else {
-            throw new Error(`HTTP error! status: ${xhr.status}`);
-        }
-    };
-    xhr.onerror = function () {
-        console.error('Conversion error:', xhr.statusText);
-        alert(`An error occurred during the conversion process: ${xhr.statusText}`);
-        resetState();
-    };
-    xhr.send(formData);
-
-    // Start fake conversion progress after upload is complete
-    xhr.upload.onload = () => {
-        updateStatus('Converting file...');
-        startFakeProgress();
-    };
+        })
+        .catch(error => {
+            console.error('Conversion error:', error);
+            alert(`An error occurred during the conversion process: ${error.message}`);
+            resetState();
+        });
 }
 
 function downloadConvertedFile() {
@@ -168,7 +172,6 @@ function downloadConvertedFile() {
     }
 
     const downloadUrl = convertedFileInfo.downloadUrl;
-    console.log('Initiating download from:', downloadUrl);
     updateStatus('Preparing download...');
 
     fetch(downloadUrl)
@@ -179,33 +182,8 @@ function downloadConvertedFile() {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            const contentLength = response.headers.get('Content-Length');
-            const total = parseInt(contentLength, 10);
-            let loaded = 0;
-
-            updateStatus('Downloading file...');
-
-            const reader = response.body.getReader();
-            const stream = new ReadableStream({
-                start(controller) {
-                    function push() {
-                        reader.read().then(({ done, value }) => {
-                            if (done) {
-                                controller.close();
-                                return;
-                            }
-                            loaded += value.length;
-                            updateProgressBar((loaded / total) * 100);
-                            controller.enqueue(value);
-                            push();
-                        });
-                    }
-                    push();
-                }
-            });
-            return new Response(stream);
+            return response.blob();
         })
-        .then(response => response.blob())
         .then(blob => {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -215,6 +193,7 @@ function downloadConvertedFile() {
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
+            updateStatus('Download complete.');
         })
         .catch(error => {
             console.error('Download error:', error);
@@ -224,21 +203,17 @@ function downloadConvertedFile() {
                 updateStatus('Download period expired. Please convert the file again.');
                 resetState();
             }
-        })
-        .finally(() => {
-            // Only reset if download was successful
-            if (convertedFileInfo) {
-                updateStatus('Download complete.');
-                // Don't reset progress here, keep it at 100%
-            }
         });
 }
 
 function resetProgress() {
     uploadProgress = 0;
     conversionProgress = 0;
+    downloadProgress = 0;
     updateProgressBar(0);
-    clearInterval(fakeProgressInterval);
+    if (fakeProgressInterval) {
+        clearInterval(fakeProgressInterval);
+    }
 }
 
 function resetState() {

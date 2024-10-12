@@ -8,17 +8,30 @@ const fsPromises = fs.promises;
 const ffmpegPath = require('ffmpeg-static');
 const crypto = require('crypto');
 
-
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
 const app = express();
-const initialPort = process.env.PORT || 5783;
+const port = process.env.PORT || 5783;
+const maxFileSize = 50 * 1024 * 1024; // 50 MB
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 
-app.use(cors());
+// CORS configuration
+const corsOptions = {
+    origin: (origin, callback) => {
+        const allowedOrigins = [process.env.CLIENT_DOMAIN, process.env.GITHUB_PAGES_DOMAIN];
+        if (!origin || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+app.use(cors(corsOptions));
 
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
@@ -40,23 +53,24 @@ const upload = multer({
         cb(null, true);
     },
     limits: {
-        fileSize: 50 * 1024 * 1024 // 50 MB limit
+        fileSize: maxFileSize
     }
 });
 
 async function ensureUploadsDir() {
+    const uploadDir = path.join(__dirname, 'uploads');
     try {
-        await fsPromises.access('uploads');
+        await fsPromises.access(uploadDir);
     } catch (error) {
         if (error.code === 'ENOENT') {
-            await fsPromises.mkdir('uploads');
+            await fsPromises.mkdir(uploadDir, { recursive: true });
         } else {
             throw error;
         }
     }
 }
 
-function checkFFmpeg() {
+async function checkFFmpeg() {
     return new Promise((resolve, reject) => {
         ffmpeg.getAvailableFormats((err, formats) => {
             if (err) {
@@ -74,17 +88,22 @@ function convertToMp3(inputPath, outputPath) {
     return new Promise((resolve, reject) => {
         ffmpeg(inputPath)
             .toFormat('mp3')
-            .audioBitrate('96k')
+            .audioBitrate('192k')
             .on('start', (commandLine) => {
                 console.log('FFmpeg process started:', commandLine);
+            })
+            .on('progress', (progress) => {
+                console.log('Processing: ' + progress.percent + '% done');
             })
             .on('end', () => {
                 console.log('Conversion completed');
                 resolve();
             })
-            .on('error', (err) => {
-                console.error('FFmpeg error:', err);
-                reject(err);
+            .on('error', (err, stdout, stderr) => {
+                console.error('FFmpeg error:', err.message);
+                console.error('FFmpeg stdout:', stdout);
+                console.error('FFmpeg stderr:', stderr);
+                reject(new Error(`FFmpeg error: ${err.message}\nStdout: ${stdout}\nStderr: ${stderr}`));
             })
             .save(outputPath);
     });
@@ -96,7 +115,6 @@ function scheduleFileCleanup(filePath, timeout = 5 * 60 * 1000) {
     const timeoutId = setTimeout(async () => {
         try {
             await deleteFile(filePath);
-            fileCleanupMap.delete(filePath);
         } catch (error) {
             console.error(`Error deleting file ${filePath}:`, error);
         }
@@ -115,7 +133,9 @@ async function deleteFile(filePath) {
             fileCleanupMap.delete(filePath);
         }
     } catch (error) {
-        console.error(`Error deleting file ${filePath}:`, error);
+        if (error.code !== 'ENOENT') {
+            console.error(`Error deleting file ${filePath}:`, error);
+        }
     }
 }
 
@@ -129,7 +149,7 @@ app.post('/convert', upload.single('file'), async (req, res) => {
 
     const inputPath = req.file.path;
     const originalName = path.parse(req.file.originalname).name;
-    const outputFileName = `${originalName}.mp3`;
+    const outputFileName = `${originalName}-${Date.now()}.mp3`;
     const outputPath = path.join('uploads', outputFileName);
 
     console.log('Input path:', inputPath);
@@ -139,7 +159,7 @@ app.post('/convert', upload.single('file'), async (req, res) => {
         await fsPromises.access(inputPath, fs.constants.R_OK);
         await convertToMp3(inputPath, outputPath);
         const stats = await fsPromises.stat(outputPath);
-        const protocol = req.protocol;
+        const protocol = req.secure || (req.headers['x-forwarded-proto'] === 'https') ? 'https' : 'http';
         const host = req.get('host');
 
         scheduleFileCleanup(outputPath);
@@ -152,7 +172,11 @@ app.post('/convert', upload.single('file'), async (req, res) => {
         });
     } catch (error) {
         console.error('Conversion error:', error);
-        res.status(500).json({ status: 'error', message: error.message });
+        res.status(500).json({
+            status: 'error',
+            message: 'Conversion failed',
+            details: error.message
+        });
     } finally {
         await deleteFile(inputPath);
     }
@@ -207,7 +231,7 @@ app.get('/download/:filename', async (req, res) => {
     }
 });
 
-async function startServer(port) {
+async function startServer() {
     try {
         await ensureUploadsDir();
         await checkFFmpeg();
@@ -215,13 +239,6 @@ async function startServer(port) {
         app.listen(port, () => {
             console.log(`Server is running in ${process.env.NODE_ENV || 'development'} mode on port ${port}`);
             console.log('FFmpeg path:', ffmpegPath);
-        }).on('error', (err) => {
-            if (err.code === 'EADDRINUSE') {
-                console.log(`Port ${port} is busy, trying the next port...`);
-                startServer(port + 1);
-            } else {
-                console.error('Error starting server:', err);
-            }
         });
     } catch (error) {
         console.error('Error starting server:', error);
@@ -229,4 +246,4 @@ async function startServer(port) {
     }
 }
 
-startServer(initialPort);
+startServer();
