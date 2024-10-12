@@ -1,0 +1,15 @@
+User Type,Screen,Layout,Interactions,Navigation,Key Features
+Single User,Explorer Page,Grid or List view of prompts,Search bar; Filter options; Click to view prompt details,Navigation drawer or top bar to access Management Area,Display all prompts; Search and filter functionality
+Single User,Management Area - PIN Entry,Centered PIN entry form,Enter PIN; Submit button,Back to Explorer Page,Secure access to management features
+Single User,Management Area - Dashboard,List of prompts with CRUD options,Add new prompt; Edit prompt; Delete prompt; Organize into collections,Navigation to Explorer Page; Access to individual prompt editing,CRUD operations on prompts; Organize prompts into collections
+Single User,Prompt Detail View,Detailed view of a single prompt,Edit prompt; Delete prompt; Copy prompt text,Back to previous view (Explorer or Management),Display full prompt details; Quick actions (edit, delete, copy)
+Single User,Add/Edit Prompt Form,Form with fields for prompt details,Input prompt text; Add tags; Select collection; Save changes,Cancel and return to previous view,Create new prompts; Edit existing prompts; Add tags and select collections
+Single User,Settings Page,List of user preferences and options,Toggle theme (light/dark); Set default view preferences,Access from navigation drawer or top bar,Customize app appearance and behavior
+Single User,Collections View,Grid or List of collections,Create new collection; Edit collection; Delete collection,Navigate to individual collection view,Manage prompt collections
+Single User,Individual Collection View,List of prompts in the collection,Add prompt to collection; Remove prompt from collection,Back to Collections View,View and manage prompts within a specific collection
+Single User,Backup/Export Page,Options for backup and export functions,Initiate backup; Choose export format; Download exported data,Access from Settings or Management Area,Create backups of all prompts and collections; Export data in common formats (e.g., JSON, CSV)
+Single User,Import Page,File upload area and import options,Upload file; Map fields; Confirm import,Access from Management Area,Import prompts from external sources; Merge or replace existing data
+Single User,Tag Management Page,List of existing tags with options to add, edit, delete,Create new tags; Edit tag names; Delete unused tags; Merge tags,Access from Management Area,Centralized management of tags used across prompts
+Single User,Analytics Page,Charts and statistics about prompt usage,View different time periods; Filter by collections or tags,Access from Management Area,Track most used prompts; View usage trends; Identify underutilized prompts or collections
+Single User,Prompt Detail View,List of previous versions of the prompt,View old versions; Restore previous versions,Access from Prompt Detail View,Track changes to prompts over time; Ability to revert to previous versions
+Single User,"Explorer Page and Management Area",Section for pinned or favorite prompts,Pin/unpin prompts; Reorder pinned prompts,Easily accessible from main views,Quickly access frequently used prompts

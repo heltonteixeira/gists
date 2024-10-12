@@ -1,0 +1,25 @@
+{
+    "exportType": "",
+    "state": {
+        "sessionGroups": [],
+        "sessions": [
+            {
+                "config": {
+                    "model": "",
+                    "provider": "",
+                    "systemRole": ""
+                },
+                "meta": {
+                    "description": "",
+                    "title": "",
+                    "tags": []
+                },
+                "type": "",
+                "createdAt": "",
+                "id": "",
+                "updatedAt": ""
+            }
+        ]
+    },
+    "version": 7
+}

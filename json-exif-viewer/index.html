@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Viewer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1>JSON Viewer</h1>
+    <div class="controls">
+        <input type="file" id="fileInput" class="button-style">
+        <button id="editButton" class="button-style">Edit JSON</button>
+        <button id="saveButton" class="button-style">Save Changes</button>
+        <button id="exportButton" class="button-style">Export JSON</button>
+    </div>
+    <div class="filters">
+        <input type="text" id="filterInput" placeholder="Filter JSON (e.g. {'key': 'value'})">
+        <input type="text" id="searchInput" placeholder="Search...">
+    </div>
+    <div id="treeView"></div>
+    <div id="fileDisplay">No JSON file loaded. Please choose a file to begin.</div>
+    <div id="paginationControls"></div>
+    <div id="searchResults"></div>
+
+    <script src="script.js"></script>
+    <script src="search.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+Your selected colors:
+
+    Text: #e6dcef - rgb(230, 220, 239) - hsl(272, 37%, 90%)
+    Background: #2f2936 - rgb(47, 41, 54) - hsl(268, 14%, 19%)
+    Primary: #d6b2ff - rgb(214, 178, 255) - hsl(268, 100%, 85%)
+    Secondary: #3e0d60 - rgb(62, 13, 96) - hsl(275, 76%, 21%)
+    Accent: #d45302 - rgb(212, 83, 2) - hsl(23, 98%, 42%)
+
+Realtime Colors link for selected colors: https://www.realtimecolors.com/?colors=e6dcef-2f2936-d6b2ff-3e0d60-d45302&fonts=Noto%20Sans%20Display-IBM%20Plex%20Sans
+
+Thanks for using RealtimeColors.com!

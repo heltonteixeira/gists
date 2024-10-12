@@ -1,0 +1,321 @@
+/* Global Styles */
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2c3e50;
+    --background-color: #f8f9fa;
+    --text-color: #333;
+    --border-color: #e0e0e0;
+    --tag-bg-color: #e1f0fb;
+    --tag-text-color: #2980b9;
+    --success-color: #2ecc71;
+    --error-color: #e74c3c;
+    --hover-color: #2980b9;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin: 0;
+}
+
+/* Buttons */
+.btn-primary, .btn-secondary {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #e0e0e0;
+    color: var(--text-color);
+}
+
+.btn-primary:hover, .btn-secondary:hover {
+    transform: translateY(-1px);
+}
+
+.btn-primary:hover {
+    background-color: var(--hover-color);
+}
+
+.btn-secondary:hover {
+    background-color: #d0d0d0;
+}
+
+/* Search and Filter */
+.search-filter {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+#searchInput, #folderFilter {
+    flex: 1;
+    min-width: 200px;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Bookmark List */
+.bookmark-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.bookmark {
+    background-color: white;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.bookmark:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.bookmark-info {
+    flex-grow: 1;
+    min-width: 200px;
+}
+
+.bookmark-title {
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    color: var(--secondary-color);
+}
+
+.bookmark-details {
+    font-size: 12px;
+    color: #7f8c8d;
+    margin: 0;
+}
+
+.bookmark-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-icon, .delete-icon {
+    cursor: pointer;
+    color: var(--primary-color);
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.edit-icon:hover, .delete-icon:hover {
+    color: var(--secondary-color);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 4px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: var(--secondary-color);
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="url"] {
+    width: calc(100% - 4%);
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+/* Input Suggestions */
+.input-container {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1;
+}
+
+.suggestion {
+    padding: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.suggestion:hover, .suggestion.selected {
+    background-color: var(--tag-bg-color);
+}
+
+/* Selected Tags */
+.selected-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+    margin-bottom: 16px;
+}
+
+.selected-tag {
+    background-color: var(--tag-bg-color);
+    color: var(--tag-text-color);
+    padding: 4px 8px;
+    border-radius: 16px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.remove-tag {
+    margin-left: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Toast Notifications */
+#toastContainer {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toast {
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.toast.success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.toast.error {
+    background-color: var(--error-color);
+    color: white;
+}
+
+.toast.warning {
+    background-color: #FFC107;
+    color: black;
+}
+
+.toast.info {
+    background-color: #2196F3;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    h1 {
+        margin-bottom: 10px;
+    }
+
+    .search-filter {
+        flex-direction: column;
+    }
+
+    #searchInput, #folderFilter {
+        width: 100%;
+    }
+
+    .bookmark {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .bookmark-actions {
+        margin-top: 10px;
+    }
+}
