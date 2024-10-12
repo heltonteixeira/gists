@@ -2,34 +2,17 @@
   "name": "wav-to-mp3-converter",
   "version": "1.0.0",
   "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "prod": "NODE_ENV=production node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint .",
-    "prepare": "husky install"
+  "engines": {
+    "node": ">=16.0.0"
   },
-  "keywords": [
-    "wav",
-    "mp3",
-    "converter",
-    "ffmpeg"
-  ],
-  "author": "",
-  "license": "ISC",
-  "description": "A WAV to MP3 converter server",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.1",
     "ffmpeg-static": "^5.2.0",
-    "fluent-ffmpeg": "^2.1.3",
-    "multer": "^1.4.5-lts.1"
-  },
-  "devDependencies": {
-    "dotenv": "^16.0.3",
-    "eslint": "^8.38.0",
-    "husky": "^8.0.3",
-    "nodemon": "^3.1.7"
+    "fluent-ffmpeg": "2.1.2",
+    "multer": ">=1.4.5-lts.1"
   }
 }
