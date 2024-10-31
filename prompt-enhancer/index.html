@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Enhancer Demo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+</head>
+
+<body>
+    <main class="is-clipped">
+        <div class="hero is-fullheight is-primary is-bold">
+            <div class="hero-head">
+                <nav class="navbar is-primary py-2" role="navigation" aria-label="main navigation">
+                    <div class="navbar-brand">
+                        <div class="navbar-item">
+                            <h1 class="title is-4 has-text-white">Prompt Enhancer Demo</h1>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="hero-body is-paddingless">
+                <div class="container">
+                    <div class="columns is-centered is-gapless">
+                        <div class="column is-8">
+                            <div class="box mx-5">
+                                <form id="promptForm" class="mb-4">
+                                    <div class="field">
+                                        <label class="label is-small">Enter your prompt:</label>
+                                        <div class="control">
+                                            <textarea 
+                                                class="textarea is-small" 
+                                                id="originalPrompt" 
+                                                name="originalPrompt"
+                                                placeholder="Enter your prompt here..."
+                                                rows="5"
+                                            ></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="control">
+                                            <button type="submit" class="button is-primary is-small is-fullwidth">
+                                                Generate Enhanced Prompts
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <section id="results" class="mt-4">
+                                    <h2 class="title is-6 mb-3">Enhanced Prompts:</h2>
+                                    
+                                    <div class="field mb-3">
+                                        <label class="label is-small">Specific and Detailed</label>
+                                        <div class="control">
+                                            <textarea 
+                                                id="variation1" 
+                                                class="textarea is-small" 
+                                                rows="5"
+                                                readonly
+                                            ></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="field mb-3">
+                                        <label class="label is-small">Clear and Concise</label>
+                                        <div class="control">
+                                            <textarea 
+                                                id="variation2" 
+                                                class="textarea is-small" 
+                                                rows="5"
+                                                readonly
+                                            ></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label class="label is-small">Precise and Contextual</label>
+                                        <div class="control">
+                                            <textarea 
+                                                id="variation3" 
+                                                class="textarea is-small" 
+                                                rows="5"
+                                                readonly
+                                            ></textarea>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-foot">
+                <footer class="footer has-background-primary-light py-3">
+                    <div class="content has-text-centered is-small">
+                        <p class="is-size-7">
+                            Powered by 
+                            <a href="https://github.com/prompt-engineering/prompt-engineering" 
+                               target="_blank"
+                               class="has-text-primary">
+                                Prompt Engineering
+                            </a>
+                        </p>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
