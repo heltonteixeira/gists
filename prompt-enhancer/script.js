@@ -1,30 +1,30 @@
 class PromptEnhancer {
     constructor() {
         this.styles = [
-            { 
-                id: 'concise', 
-                name: 'Concise', 
+            {
+                id: 'concise',
+                name: 'Concise',
                 icon: 'fa-compress-alt',
                 pattern: 'Make it more concise while maintaining clarity',
                 description: 'Creates a shorter, clearer version of your prompt'
             },
-            { 
-                id: 'technical', 
-                name: 'Technical', 
+            {
+                id: 'technical',
+                name: 'Technical',
                 icon: 'fa-cogs',
                 pattern: 'Add technical precision and detail',
                 description: 'Adds technical terminology and precise specifications'
             },
-            { 
-                id: 'informative', 
-                name: 'Informative', 
+            {
+                id: 'informative',
+                name: 'Informative',
                 icon: 'fa-info-circle',
                 pattern: 'Make it more informative and comprehensive',
                 description: 'Expands your prompt with additional relevant information'
             },
-            { 
-                id: 'generic', 
-                name: 'Generic', 
+            {
+                id: 'generic',
+                name: 'Generic',
                 icon: 'fa-random',
                 pattern: 'Make it more generic and versatile',
                 description: 'Makes your prompt more adaptable and widely applicable'
@@ -43,16 +43,16 @@ class PromptEnhancer {
         this.apiKeyInput = document.getElementById('apiKeyInput');
         this.contextCheckbox = document.getElementById('extractContext');
         this.enhanceButton = document.getElementById('enhanceButton');
-        
+
         // Tab containers
         this.styleCheckboxes = document.getElementById('styleCheckboxes');
         this.outputTabs = document.getElementById('outputTabs');
         this.enhancedOutputs = document.getElementById('enhancedOutputs');
-        
+
         // Notification elements
         this.notification = document.querySelector('.notification-float');
         this.notificationMessage = document.querySelector('.notification-message');
-        
+
         // Load saved API key
         const savedApiKey = localStorage.getItem('apiKey');
         if (savedApiKey) {
@@ -66,10 +66,10 @@ class PromptEnhancer {
         const mainTabs = mainTabsContainer.querySelectorAll('li');
         const stylesTab = document.getElementById('stylesTab');
         const settingsTab = document.getElementById('settingsTab');
-        
+
         mainTabsContainer.addEventListener('click', (e) => {
-                e.preventDefault();
-                
+            e.preventDefault();
+
             // Find the clicked tab element
             const clickedTab = e.target.closest('a');
             if (!clickedTab) return;
@@ -80,16 +80,16 @@ class PromptEnhancer {
             // Update active tab state
             mainTabs.forEach(tab => tab.classList.remove('is-active'));
             clickedTab.closest('li').classList.add('is-active');
-                
+
             // Show/hide appropriate content
             if (tabType === 'styles') {
-                    stylesTab.classList.remove('is-hidden');
-                    settingsTab.classList.add('is-hidden');
+                stylesTab.classList.remove('is-hidden');
+                settingsTab.classList.add('is-hidden');
             } else if (tabType === 'settings') {
-                    settingsTab.classList.remove('is-hidden');
-                    stylesTab.classList.add('is-hidden');
-                    }
-                });
+                settingsTab.classList.remove('is-hidden');
+                stylesTab.classList.add('is-hidden');
+            }
+        });
 
         // Enhance button
         this.enhanceButton.addEventListener('click', () => this.enhancePrompt());
@@ -153,7 +153,7 @@ class PromptEnhancer {
 
     updateOutputTabs() {
         const selectedStyles = this.getSelectedStyles();
-        
+
         // Update tabs
         this.outputTabs.innerHTML = `
             <ul>
@@ -169,7 +169,7 @@ class PromptEnhancer {
                 `).join('')}
             </ul>
         `;
-        
+
         // Update output containers
         this.enhancedOutputs.innerHTML = selectedStyles.map((style, index) => `
             <div class="content ${index === 0 ? '' : 'is-hidden'}" data-style="${style.id}">
@@ -193,7 +193,7 @@ class PromptEnhancer {
                 // Update tabs
                 this.outputTabs.querySelectorAll('li').forEach(t => t.classList.remove('is-active'));
                 tab.classList.add('is-active');
-                
+
                 // Update panels
                 this.enhancedOutputs.querySelectorAll('.content').forEach(panel => panel.classList.add('is-hidden'));
                 this.enhancedOutputs.querySelectorAll('.content')[index].classList.remove('is-hidden');
@@ -211,7 +211,7 @@ class PromptEnhancer {
         this.notification.classList.remove('is-success', 'is-danger', 'is-warning', 'is-info');
         // Add new type class
         this.notification.classList.add(type);
-        
+
         this.notificationMessage.textContent = message;
         this.notification.style.display = 'block';
 
@@ -224,10 +224,10 @@ class PromptEnhancer {
     async copyToClipboard(event) {
         const button = event.currentTarget;
         const textarea = button.parentElement.querySelector('textarea');
-        
+
         try {
             await navigator.clipboard.writeText(textarea.value);
-            
+
             // Show success feedback
             const originalHTML = button.innerHTML;
             button.classList.remove('is-info');
@@ -238,7 +238,7 @@ class PromptEnhancer {
                 </span>
                 <span>Copied!</span>
             `;
-            
+
             setTimeout(() => {
                 button.innerHTML = originalHTML;
                 button.classList.remove('is-success');
@@ -250,10 +250,46 @@ class PromptEnhancer {
         }
     }
 
+    // Add this new method to your PromptEnhancer class
+    extractContextFromPrompt(prompt) {
+        // Extract potential context markers
+        const contextPatterns = [
+            // Role/persona definitions
+            /(?:as a|you are|act as|assuming the role of) (.+?)(?:\.|,|\n|$)/i,
+            // Given/context statements
+            /(?:given that|considering that|in the context of|assuming) (.+?)(?:\.|,|\n|$)/i,
+            // Background information
+            /(?:background:|context:|scenario:) (.+?)(?:\n|$)/i,
+            // Requirements or constraints
+            /(?:requirements:|constraints:|must|should|needs to) (.+?)(?:\.|,|\n|$)/i
+        ];
+
+        let extractedContext = [];
+
+        // Apply each pattern and collect matches
+        for (const pattern of contextPatterns) {
+            const match = prompt.match(pattern);
+            if (match && match[1]) {
+                extractedContext.push(match[1].trim());
+            }
+        }
+
+        // If no context was found through patterns, take the first sentence as context
+        if (extractedContext.length === 0) {
+            const firstSentence = prompt.split(/[.!?]\s+/)[0];
+            if (firstSentence && firstSentence.length < prompt.length) {
+                extractedContext.push(firstSentence);
+            }
+        }
+
+        return extractedContext.join(' ');
+    }
+
     async enhancePrompt() {
         const prompt = this.promptInput.value.trim();
         const apiKey = this.apiKeyInput.value.trim();
-        
+        const preserveContext = this.contextCheckbox.checked;
+
         // Validation
         if (!prompt) {
             this.showNotification('Please enter a prompt to enhance', 'is-warning');
@@ -270,13 +306,36 @@ class PromptEnhancer {
             return;
         }
 
+        // Extract context if enabled
+        let context = '';
+        if (preserveContext) {
+            context = this.extractContextFromPrompt(prompt);
+        }
+
         // Show loading state
         this.enhanceButton.classList.add('is-loading');
-        
+
         try {
             // Process each selected style
             for (const style of selectedStyles) {
                 try {
+                    const messages = [
+                        {
+                            role: 'system',
+                            content: `You are a prompt enhancement assistant. Enhance the following prompt according to this style: ${style.pattern}. Only respond with the enhanced prompt, nothing else.`
+                        }
+                    ];
+
+                    // Add context preservation instruction if enabled
+                    if (preserveContext && context) {
+                        messages[0].content += `\n\nIMPORTANT: Preserve this context in your enhancement: "${context}"`
+                    }
+
+                    messages.push({
+                        role: 'user',
+                        content: prompt
+                    });
+
                     const response = await fetch('https://api.openai.com/v1/chat/completions', {
                         method: 'POST',
                         headers: {
@@ -285,16 +344,7 @@ class PromptEnhancer {
                         },
                         body: JSON.stringify({
                             model: 'gpt-4o-mini',
-                            messages: [
-                                {
-                                    role: 'system',
-                                    content: `You are a prompt enhancement assistant. Enhance the following prompt according to this style: ${style.pattern}`
-                                },
-                                {
-                                    role: 'user',
-                                    content: prompt
-                                }
-                            ],
+                            messages: messages,
                             temperature: 0.7
                         })
                     });
@@ -305,7 +355,7 @@ class PromptEnhancer {
 
                     const data = await response.json();
                     const enhancedPrompt = data.choices[0].message.content;
-                    
+
                     // Update corresponding output area
                     const outputArea = this.enhancedOutputs
                         .querySelector(`[data-style="${style.id}"] textarea`);
