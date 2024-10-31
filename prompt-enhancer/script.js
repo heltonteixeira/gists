@@ -32,7 +32,18 @@ class PromptEnhancer {
                     messages: [
                         {
                             role: 'system',
-                            content: `You are a prompt enhancement assistant. Your task is to improve the given prompt following this style: ${style}. Only respond with the enhanced prompt, nothing else.`
+                            content: `You are an expert prompt engineering assistant specialized in prompt enhancement. Your task is to analyze and reconstruct the given prompt following this enhancement pattern: ${style}. 
+
+    Guidelines:
+    - Maintain the original intent and core meaning
+    - Follow the specified style pattern exactly
+    - Preserve any technical requirements or constraints
+    - Ensure the enhanced prompt is self-contained
+    - Structure the prompt logically
+    
+    Enhancement Style: ${style}
+    
+    Only output the enhanced prompt without explanations or meta-commentary.`
                         },
                         {
                             role: 'user',
@@ -74,9 +85,9 @@ class PromptEnhancer {
         try {
             // Generate three variations simultaneously
             const variations = await Promise.all([
-                this.generateEnhancedPrompt(prompt, 'Make it more specific and detailed'),
-                this.generateEnhancedPrompt(prompt, 'Make it more concise but maintain clarity'),
-                this.generateEnhancedPrompt(prompt, 'Add technical precision and context')
+                this.generateEnhancedPrompt(prompt, `DETAILED & SPECIFIC, Expand core concepts with explicit parameters, Add relevant context and constraints, Include specific examples where helpful, Define success criteria and edge cases, Break down complex requirements into clear steps`),
+                this.generateEnhancedPrompt(prompt, `CONCISE & POWERFUL, Distill the prompt to its essential elements, Use precise, impactful language, Remove redundancies while preserving meaning, Maintain clarity through strategic word choice, Focus on actionable instructions`),
+                this.generateEnhancedPrompt(prompt, `TECHNICAL & STRUCTURED, Incorporate domain-specific terminology, Add technical parameters and constraints, Structure the prompt using clear hierarchies, Include input/output specifications, Define technical success criteria`)
             ]);
 
             // Update textareas with results
