@@ -1,114 +1,185 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prompt Enhancer Demo</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Prompt Enhancer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        html {
+            height: -webkit-fill-available;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* Mobile viewport bug fix */
+            min-height: -webkit-fill-available;
+        }
+        .main-wrapper {
+            flex: 1 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .notification-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: none;
+        }
+        .char-count {
+            text-align: right;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        .style-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+            margin-left: 1.8rem;
+        }
+        .footer {
+            flex-shrink: 0;
+            width: 100%;
+        }
+        @supports (-webkit-touch-callout: none) {
+            /* iOS specific fix */
+            .main-wrapper {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+    </style>
 </head>
-
 <body>
-    <main class="is-clipped">
-        <div class="hero is-fullheight is-primary is-bold">
-            <div class="hero-head">
-                <nav class="navbar is-primary py-2" role="navigation" aria-label="main navigation">
-                    <div class="navbar-brand">
-                        <div class="navbar-item">
-                            <h1 class="title is-4 has-text-white">Prompt Enhancer Demo</h1>
+<div class="has-background-light main-wrapper">
+        <!-- Hero Section -->
+        <section class="hero is-success is-bold">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title is-2 mb-2">Prompt Enhancer</h1>
+                    <h2 class="subtitle is-4">Transform your prompts with AI-powered enhancements</h2>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Main Content -->
+        <section class="section">
+            <div class="container">
+                <div class="columns is-variable is-6">
+                    <!-- Left Column -->
+                    <div class="column is-5">
+                        <div class="box p-5">
+                            <!-- Prompt Input -->
+                            <div class="field mb-5">
+                                <label class="label">Your Prompt</label>
+                                <div class="control">
+                                    <textarea id="promptInput" class="textarea" placeholder="Enter your prompt here..." rows="6"></textarea>
+                                </div>
+                                <p class="char-count mt-2">0 characters</p>
+                            </div>
+    
+                            <!-- Enhance Button -->
+                            <div class="field mb-5">
+                                <div class="control">
+                                    <button id="enhanceButton" class="button is-success is-fullwidth">
+                                        <span class="icon">
+                                            <i class="fas fa-magic"></i>
+                                        </span>
+                                        <span>Enhance</span>
+                                    </button>
+                                </div>
+                            </div>
+    
+                            <!-- Tabs -->
+                            <div class="tabs is-boxed">
+                                <ul>
+                                    <li class="is-active" data-tab="styles">
+                                        <a data-tab="styles">
+                                            <span class="icon is-small"><i class="fas fa-paint-brush"></i></span>
+                                            <span>Styles</span>
+                                        </a>
+                                    </li>
+                                    <li data-tab="settings">
+                                        <a data-tab="settings">
+                                            <span class="icon is-small"><i class="fas fa-cog"></i></span>
+                                            <span>Settings</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+    
+                            <!-- Styles Tab Content -->
+                            <div id="stylesTab" class="content">
+                                <div id="styleCheckboxes" class="field">
+                                    <!-- Style checkboxes will be inserted here by JavaScript -->
+                                </div>
+                            </div>
+    
+                            <!-- Settings Tab Content -->
+                            <div id="settingsTab" class="content is-hidden">
+                                <div class="field mb-4">
+                                    <label class="label">API Key</label>
+                                    <div class="control">
+                                        <input id="apiKeyInput" class="input" type="password" placeholder="Enter your OpenAI API key">
+                                    </div>
+                                </div>
+    
+                                <div class="field mb-5">
+                                    <div class="control">
+                                        <label class="checkbox">
+                                            <input id="extractContext" type="checkbox">
+                                            Preserve Context
+                                        </label>
+                                    </div>
+                                </div>
+    
+                                <div class="field">
+                                    <div class="control">
+                                        <button id="saveSettings" class="button is-info">
+                                            <span class="icon">
+                                                <i class="fas fa-save"></i>
+                                            </span>
+                                            <span>Save Settings</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </nav>
-            </div>
-
-            <div class="hero-body is-paddingless">
-                <div class="container">
-                    <div class="columns is-centered is-gapless">
-                        <div class="column is-8">
-                            <div class="box mx-5">
-                                <form id="promptForm" class="mb-4">
-                                    <div class="field">
-                                        <label class="label is-small">Enter your prompt:</label>
-                                        <div class="control">
-                                            <textarea 
-                                                class="textarea is-small" 
-                                                id="originalPrompt" 
-                                                name="originalPrompt"
-                                                placeholder="Enter your prompt here..."
-                                                rows="5"
-                                            ></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="field">
-                                        <div class="control">
-                                            <button type="submit" class="button is-primary is-small is-fullwidth">
-                                                Generate Enhanced Prompts
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-
-                                <section id="results" class="mt-4">
-                                    <h2 class="title is-6 mb-3">Enhanced Prompts:</h2>
-                                    
-                                    <div class="field mb-3">
-                                        <label class="label is-small">Specific and Detailed</label>
-                                        <div class="control">
-                                            <textarea 
-                                                id="variation1" 
-                                                class="textarea is-small" 
-                                                rows="5"
-                                                readonly
-                                            ></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div class="field mb-3">
-                                        <label class="label is-small">Clear and Concise</label>
-                                        <div class="control">
-                                            <textarea 
-                                                id="variation2" 
-                                                class="textarea is-small" 
-                                                rows="5"
-                                                readonly
-                                            ></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <label class="label is-small">Precise and Contextual</label>
-                                        <div class="control">
-                                            <textarea 
-                                                id="variation3" 
-                                                class="textarea is-small" 
-                                                rows="5"
-                                                readonly
-                                            ></textarea>
-                                        </div>
-                                    </div>
-                                </section>
+    
+                    <!-- Right Column -->
+                    <div class="column is-7">
+                        <div class="box p-5">
+                            <div class="tabs is-boxed" id="outputTabs">
+                                <!-- Output tabs will be inserted here by JavaScript -->
+                            </div>
+    
+                            <div id="enhancedOutputs" class="content">
+                                <!-- Enhanced outputs will be inserted here by JavaScript -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="hero-foot">
-                <footer class="footer has-background-primary-light py-3">
-                    <div class="content has-text-centered is-small">
-                        <p class="is-size-7">
-                            Powered by 
-                            <a href="https://github.com/prompt-engineering/prompt-engineering" 
-                               target="_blank"
-                               class="has-text-primary">
-                                Prompt Engineering
-                            </a>
-                        </p>
-                    </div>
-                </footer>
-            </div>
+        </section>
+    
+        <!-- Notification -->
+        <div class="notification-float notification is-success is-light">
+            <button class="delete"></button>
+            <span class="notification-message"></span>
         </div>
-    </main>
-    <script src="script.js"></script>
+</div>
+
+<!-- Footer -->
+<footer class="footer is-paddingless">
+    <div class="section has-text-centered py-2">
+        <p>Powered by Prompt Engineering</p>
+    </div>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>

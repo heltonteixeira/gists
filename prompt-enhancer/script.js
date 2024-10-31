@@ -1,114 +1,329 @@
-// Constants
-const OPENAI_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
-const MODEL = 'gpt-4o-mini'; // Using GPT-4 Turbo as specified
-
 class PromptEnhancer {
     constructor() {
-        this.form = document.getElementById('promptForm');
-        this.originalPrompt = document.getElementById('originalPrompt');
-        this.variations = {
-            1: document.getElementById('variation1'),
-            2: document.getElementById('variation2'),
-            3: document.getElementById('variation3')
-        };
-
-        this.init();
-    }
-
-    init() {
-        this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-    }
-
-    async generateEnhancedPrompt(originalPrompt, style) {
-        try {
-            const response = await fetch(OPENAI_ENDPOINT, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer <API-KEY>` // Replace with actual API key
-                },
-                body: JSON.stringify({
-                    model: MODEL,
-                    messages: [
-                        {
-                            role: 'system',
-                            content: `You are an expert prompt engineering assistant specialized in prompt enhancement. Your task is to analyze and reconstruct the given prompt following this enhancement pattern: ${style}. 
-
-    Guidelines:
-    - Maintain the original intent and core meaning
-    - Follow the specified style pattern exactly
-    - Preserve any technical requirements or constraints
-    - Ensure the enhanced prompt is self-contained
-    - Structure the prompt logically
-    
-    Enhancement Style: ${style}
-    
-    Only output the enhanced prompt without explanations or meta-commentary.`
-                        },
-                        {
-                            role: 'user',
-                            content: originalPrompt
-                        }
-                    ],
-                    temperature: 0.7,
-                    max_tokens: 1024
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+        this.styles = [
+            { 
+                id: 'concise', 
+                name: 'Concise', 
+                icon: 'fa-compress-alt',
+                pattern: 'Make it more concise while maintaining clarity',
+                description: 'Creates a shorter, clearer version of your prompt'
+            },
+            { 
+                id: 'technical', 
+                name: 'Technical', 
+                icon: 'fa-cogs',
+                pattern: 'Add technical precision and detail',
+                description: 'Adds technical terminology and precise specifications'
+            },
+            { 
+                id: 'informative', 
+                name: 'Informative', 
+                icon: 'fa-info-circle',
+                pattern: 'Make it more informative and comprehensive',
+                description: 'Expands your prompt with additional relevant information'
+            },
+            { 
+                id: 'generic', 
+                name: 'Generic', 
+                icon: 'fa-random',
+                pattern: 'Make it more generic and versatile',
+                description: 'Makes your prompt more adaptable and widely applicable'
             }
+        ];
 
-            const data = await response.json();
-            return data.choices[0].message.content;
+        this.initElements();
+        this.setupListeners();
+        this.initStylesUI();
+        this.updateCharCount();
+    }
 
-        } catch (error) {
-            console.error('Error:', error);
-            throw error;
+    initElements() {
+        // Input elements
+        this.promptInput = document.getElementById('promptInput');
+        this.apiKeyInput = document.getElementById('apiKeyInput');
+        this.contextCheckbox = document.getElementById('extractContext');
+        this.enhanceButton = document.getElementById('enhanceButton');
+        
+        // Tab containers
+        this.styleCheckboxes = document.getElementById('styleCheckboxes');
+        this.outputTabs = document.getElementById('outputTabs');
+        this.enhancedOutputs = document.getElementById('enhancedOutputs');
+        
+        // Notification elements
+        this.notification = document.querySelector('.notification-float');
+        this.notificationMessage = document.querySelector('.notification-message');
+        
+        // Load saved API key
+        const savedApiKey = localStorage.getItem('apiKey');
+        if (savedApiKey) {
+            this.apiKeyInput.value = savedApiKey;
         }
     }
 
-    async handleSubmit(e) {
-        e.preventDefault();
+    setupListeners() {
+        // Main navigation tabs - Settings and Styles
+        const mainTabsContainer = document.querySelector('.tabs:not(#outputTabs)');
+        const mainTabs = mainTabsContainer.querySelectorAll('li');
+        const stylesTab = document.getElementById('stylesTab');
+        const settingsTab = document.getElementById('settingsTab');
+        
+        mainTabsContainer.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+            // Find the clicked tab element
+            const clickedTab = e.target.closest('a');
+            if (!clickedTab) return;
 
-        const prompt = this.originalPrompt.value.trim();
+            const tabType = clickedTab.getAttribute('data-tab');
+            if (!tabType) return;
 
-        if (!prompt) return;
+            // Update active tab state
+            mainTabs.forEach(tab => tab.classList.remove('is-active'));
+            clickedTab.closest('li').classList.add('is-active');
+                
+            // Show/hide appropriate content
+            if (tabType === 'styles') {
+                    stylesTab.classList.remove('is-hidden');
+                    settingsTab.classList.add('is-hidden');
+            } else if (tabType === 'settings') {
+                    settingsTab.classList.remove('is-hidden');
+                    stylesTab.classList.add('is-hidden');
+                    }
+                });
 
-        // Clear previous results
-        Object.values(this.variations).forEach(textarea => {
-            if (textarea) {  // Add null check
-                textarea.value = 'Generating...';
+        // Enhance button
+        this.enhanceButton.addEventListener('click', () => this.enhancePrompt());
+
+        // API Key storage
+        document.getElementById('saveSettings').addEventListener('click', () => {
+            localStorage.setItem('apiKey', this.apiKeyInput.value);
+            this.showNotification('Settings saved successfully', 'is-success');
+        });
+
+        // Character count
+        this.promptInput.addEventListener('input', () => this.updateCharCount());
+
+        // Style checkboxes
+        document.addEventListener('change', (e) => {
+            if (e.target.matches('#styleCheckboxes input[type="checkbox"]')) {
+                this.updateOutputTabs();
             }
         });
 
-        try {
-            // Generate three variations simultaneously
-            const variations = await Promise.all([
-                this.generateEnhancedPrompt(prompt, `DETAILED & SPECIFIC, Expand core concepts with explicit parameters, Add relevant context and constraints, Include specific examples where helpful, Define success criteria and edge cases, Break down complex requirements into clear steps`),
-                this.generateEnhancedPrompt(prompt, `CONCISE & POWERFUL, Distill the prompt to its essential elements, Use precise, impactful language, Remove redundancies while preserving meaning, Maintain clarity through strategic word choice, Focus on actionable instructions`),
-                this.generateEnhancedPrompt(prompt, `TECHNICAL & STRUCTURED, Incorporate domain-specific terminology, Add technical parameters and constraints, Structure the prompt using clear hierarchies, Include input/output specifications, Define technical success criteria`)
-            ]);
+        // Notification close button
+        this.notification.querySelector('.delete').addEventListener('click', () => {
+            this.notification.style.display = 'none';
+        });
+    }
 
-            // Update textareas with results
-            variations.forEach((variation, index) => {
-                const textarea = this.variations[index + 1];
-                if (textarea) {  // Add null check
-                    textarea.value = variation;
-                }
+    updateCharCount() {
+        const count = this.promptInput.value.length;
+        document.querySelector('.char-count').textContent = `${count} characters`;
+    }
+
+    initStylesUI() {
+        // Create style checkboxes with cards
+        this.styleCheckboxes.innerHTML = this.styles.map(style => `
+
+                <div class="control p-3">
+                    <label class="checkbox">
+                        <input type="checkbox" value="${style.id}" checked>
+                        <span class="icon-text ml-2">
+                            <span class="icon">
+                                <i class="fas ${style.icon}"></i>
+                            </span>
+                            <span class="has-text-weight-medium">${style.name}</span>
+                        </span>
+                    </label>
+                    <p class="style-description">${style.description}</p>
+                </div>
+        `).join('');
+
+        // Initialize output tabs
+        this.updateOutputTabs();
+    }
+
+    getSelectedStyles() {
+        const checkboxes = this.styleCheckboxes.querySelectorAll('input[type="checkbox"]');
+        return Array.from(checkboxes)
+            .filter(cb => cb.checked)
+            .map(cb => this.styles.find(style => style.id === cb.value))
+            .filter(Boolean);
+    }
+
+    updateOutputTabs() {
+        const selectedStyles = this.getSelectedStyles();
+        
+        // Update tabs
+        this.outputTabs.innerHTML = `
+            <ul>
+                ${selectedStyles.map((style, index) => `
+                    <li class="${index === 0 ? 'is-active' : ''}">
+                        <a>
+                            <span class="icon">
+                                <i class="fas ${style.icon}"></i>
+                            </span>
+                            <span>${style.name}</span>
+                        </a>
+                    </li>
+                `).join('')}
+            </ul>
+        `;
+        
+        // Update output containers
+        this.enhancedOutputs.innerHTML = selectedStyles.map((style, index) => `
+            <div class="content ${index === 0 ? '' : 'is-hidden'}" data-style="${style.id}">
+                <div class="field">
+                    <div class="control">
+                        <textarea class="textarea" readonly placeholder="Enhanced ${style.name} version will appear here..." rows="12"></textarea>
+                    </div>
+                    <button class="button is-small is-info mt-2 is-pulled-right copy-button">
+                        <span class="icon">
+                            <i class="fas fa-copy"></i>
+                        </span>
+                        <span>Copy</span>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        // Add tab click listeners
+        this.outputTabs.querySelectorAll('li').forEach((tab, index) => {
+            tab.addEventListener('click', () => {
+                // Update tabs
+                this.outputTabs.querySelectorAll('li').forEach(t => t.classList.remove('is-active'));
+                tab.classList.add('is-active');
+                
+                // Update panels
+                this.enhancedOutputs.querySelectorAll('.content').forEach(panel => panel.classList.add('is-hidden'));
+                this.enhancedOutputs.querySelectorAll('.content')[index].classList.remove('is-hidden');
             });
-        } catch (error) {
-            console.error('Error generating prompts:', error);
-            Object.values(this.variations).forEach(textarea => {
-                if (textarea) {  // Add null check
-                    textarea.value = 'Error generating prompt. Please try again.';
+        });
+
+        // Add copy button listeners
+        this.enhancedOutputs.querySelectorAll('.copy-button').forEach(button => {
+            button.addEventListener('click', (e) => this.copyToClipboard(e));
+        });
+    }
+
+    showNotification(message, type = 'is-success') {
+        // Remove existing type classes
+        this.notification.classList.remove('is-success', 'is-danger', 'is-warning', 'is-info');
+        // Add new type class
+        this.notification.classList.add(type);
+        
+        this.notificationMessage.textContent = message;
+        this.notification.style.display = 'block';
+
+        // Hide after 3 seconds
+        setTimeout(() => {
+            this.notification.style.display = 'none';
+        }, 3000);
+    }
+
+    async copyToClipboard(event) {
+        const button = event.currentTarget;
+        const textarea = button.parentElement.querySelector('textarea');
+        
+        try {
+            await navigator.clipboard.writeText(textarea.value);
+            
+            // Show success feedback
+            const originalHTML = button.innerHTML;
+            button.classList.remove('is-info');
+            button.classList.add('is-success');
+            button.innerHTML = `
+                <span class="icon">
+                    <i class="fas fa-check"></i>
+                </span>
+                <span>Copied!</span>
+            `;
+            
+            setTimeout(() => {
+                button.innerHTML = originalHTML;
+                button.classList.remove('is-success');
+                button.classList.add('is-info');
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy:', err);
+            this.showNotification('Failed to copy text to clipboard', 'is-danger');
+        }
+    }
+
+    async enhancePrompt() {
+        const prompt = this.promptInput.value.trim();
+        const apiKey = this.apiKeyInput.value.trim();
+        
+        // Validation
+        if (!prompt) {
+            this.showNotification('Please enter a prompt to enhance', 'is-warning');
+            return;
+        }
+        if (!apiKey) {
+            this.showNotification('Please enter your API key', 'is-warning');
+            return;
+        }
+
+        const selectedStyles = this.getSelectedStyles();
+        if (selectedStyles.length === 0) {
+            this.showNotification('Please select at least one enhancement style', 'is-warning');
+            return;
+        }
+
+        // Show loading state
+        this.enhanceButton.classList.add('is-loading');
+        
+        try {
+            // Process each selected style
+            for (const style of selectedStyles) {
+                try {
+                    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${apiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: 'gpt-4o-mini',
+                            messages: [
+                                {
+                                    role: 'system',
+                                    content: `You are a prompt enhancement assistant. Enhance the following prompt according to this style: ${style.pattern}`
+                                },
+                                {
+                                    role: 'user',
+                                    content: prompt
+                                }
+                            ],
+                            temperature: 0.7
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API Error: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    const enhancedPrompt = data.choices[0].message.content;
+                    
+                    // Update corresponding output area
+                    const outputArea = this.enhancedOutputs
+                        .querySelector(`[data-style="${style.id}"] textarea`);
+                    if (outputArea) {
+                        outputArea.value = enhancedPrompt;
+                    }
+                } catch (error) {
+                    console.error(`Error generating ${style.name} prompt:`, error);
+                    this.showNotification(`Error generating ${style.name} version: ${error.message}`, 'is-danger');
                 }
-            });
+            }
+        } finally {
+            this.enhanceButton.classList.remove('is-loading');
         }
     }
 }
 
-// Initialize the enhancer when the DOM is loaded
+// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     new PromptEnhancer();
 });
