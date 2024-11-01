@@ -1,6 +1,21 @@
 class PromptEnhancer {
     constructor() {
         this.styles = [
+            // The 'styles' property is an array of objects, each representing a unique style to be used for enhancing the prompt.
+            // Each object contains the following properties:
+            // - 'id': a unique identifier for the style, used for referencing the style in code.
+            // - 'name': a human-readable name for the style, used for display purposes.
+            // - 'icon': a font-awesome icon associated with the style, used for visual representation.
+            // - 'pattern': a brief description of the style, using a pattern or structure to guide the user's understanding.
+            // - 'description': a more detailed description of the style, providing a clear explanation of what the style does and how it affects the enhanced prompt.
+            // These properties are used to create a consistent and clear user interface for selecting and applying different styles to the prompt.
+            {
+                id: 'true',
+                name: 'True',
+                icon: 'fa-check',
+                pattern: 'Maintains the original scope, improves structure and clarity, focus on the specific elements mentioned, remove assumptions not mentioned in the original, keep the core request intact while making it more actionable',
+                description: 'Makes your prompt more accurate and  true to the original prompt' 
+            },
             {
                 id: 'concise',
                 name: 'Concise',
@@ -28,6 +43,13 @@ class PromptEnhancer {
                 icon: 'fa-random',
                 pattern: 'Make it more generic and versatile',
                 description: 'Makes your prompt more adaptable and widely applicable'
+            },
+            {
+                id: 'bespoke',
+                name: 'Bespoke',
+                icon: 'fa-pencil-ruler',
+                pattern: 'Make it more bespoke and detailed',
+                description: 'Use bespoke and detailed wording'
             }
         ];
 
