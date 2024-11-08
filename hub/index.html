@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Developer Tools Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        html {
+            height: -webkit-fill-available;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+        }
+        .main-wrapper {
+            flex: 1 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .footer {
+            flex-shrink: 0;
+            width: 100%;
+        }
+        .card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-content {
+            flex-grow: 1;
+        }
+        .tool-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        @supports (-webkit-touch-callout: none) {
+            .main-wrapper {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="has-background-light main-wrapper">
+    <!-- Hero Section -->
+    <section class="hero is-primary is-bold">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title is-2 mb-2">Developer Tools Hub</h1>
+                <h2 class="subtitle is-4">A collection of useful web-based development tools</h2>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                <!-- Prompt Enhancer -->
+                <div class="column is-4">
+                    <div class="card">
+                        <div class="card-content has-text-centered">
+                            <span class="icon tool-icon has-text-primary">
+                                <i class="fas fa-magic"></i>
+                            </span>
+                            <p class="title is-4">Prompt Enhancer</p>
+                            <p class="subtitle is-6">Transform your prompts with AI-powered enhancements</p>
+                            <div class="content">
+                                <p>Improve your AI prompts with various enhancement styles and context preservation options.</p>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="../prompt-enhancer/index.html" class="card-footer-item">
+                                <span class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </span>
+                                    <span>Open Tool</span>
+                                </span>
+                            </a>
+                        </footer>
+                    </div>
+                </div>
+
+                <!-- Mermaid Viewer -->
+                <div class="column is-4">
+                    <div class="card">
+                        <div class="card-content has-text-centered">
+                            <span class="icon tool-icon has-text-info">
+                                <i class="fas fa-project-diagram"></i>
+                            </span>
+                            <p class="title is-4">Mermaid Viewer</p>
+                            <p class="subtitle is-6">Create and preview Mermaid diagrams with ease</p>
+                            <div class="content">
+                                <p>Live preview and edit Mermaid.js diagrams with a simple and intuitive interface.</p>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="../mermaid-viewer/index.html" class="card-footer-item">
+                                <span class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </span>
+                                    <span>Open Tool</span>
+                                </span>
+                            </a>
+                        </footer>
+                    </div>
+                </div>
+
+                <!-- Format Converter -->
+                <div class="column is-4">
+                    <div class="card">
+                        <div class="card-content has-text-centered">
+                            <span class="icon tool-icon has-text-success">
+                                <i class="fas fa-exchange-alt"></i>
+                            </span>
+                            <p class="title is-4">Format Converter</p>
+                            <p class="subtitle is-6">Convert between different text formats</p>
+                            <div class="content">
+                                <p>Transform text between various formats including Markdown and other markup languages.</p>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="../format-converter/index.html" class="card-footer-item">
+                                <span class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </span>
+                                    <span>Open Tool</span>
+                                </span>
+                            </a>
+                        </footer>
+                    </div>
+                </div>
+
+                <!-- JSON EXIF Viewer -->
+                <div class="column is-4">
+                    <div class="card">
+                        <div class="card-content has-text-centered">
+                            <span class="icon tool-icon has-text-warning">
+                                <i class="fas fa-camera"></i>
+                            </span>
+                            <p class="title is-4">JSON EXIF Viewer</p>
+                            <p class="subtitle is-6">View image metadata in JSON format</p>
+                            <div class="content">
+                                <p>Extract and display EXIF metadata from images in a clean JSON format.</p>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="../json-exif-viewer/index.html" class="card-footer-item">
+                                <span class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </span>
+                                    <span>Open Tool</span>
+                                </span>
+                            </a>
+                        </footer>
+                    </div>
+                </div>
+
+                <!-- PNG EXIF Viewer -->
+                <div class="column is-4">
+                    <div class="card">
+                        <div class="card-content has-text-centered">
+                            <span class="icon tool-icon has-text-danger">
+                                <i class="fas fa-image"></i>
+                            </span>
+                            <p class="title is-4">PNG EXIF Viewer</p>
+                            <p class="subtitle is-6">Specialized PNG metadata viewer</p>
+                            <div class="content">
+                                <p>View and analyze metadata specifically from PNG image files.</p>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="../png-exif-viewer/src/index.html" class="card-footer-item">
+                                <span class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </span>
+                                    <span>Open Tool</span>
+                                </span>
+                            </a>
+                        </footer>
+                    </div>
+                </div>
+
+                <!-- WAV to MP3 Converter -->
+                <div class="column is-4">
+                    <div class="card">
+                        <div class="card-content has-text-centered">
+                            <span class="icon tool-icon has-text-link">
+                                <i class="fas fa-music"></i>
+                            </span>
+                            <p class="title is-4">WAV to MP3</p>
+                            <p class="subtitle is-6">Convert WAV files to MP3 format</p>
+                            <div class="content">
+                                <p>Simple web-based tool to convert WAV audio files to MP3 format.</p>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="../wav-to-mp3-converter/index.html" class="card-footer-item">
+                                <span class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </span>
+                                    <span>Open Tool</span>
+                                </span>
+                            </a>
+                        </footer>
+                    </div>
+                </div>
+
+                <!-- Wikitext Converter -->
+                <div class="column is-4">
+                    <div class="card">
+                        <div class="card-content has-text-centered">
+                            <span class="icon tool-icon has-text-grey">
+                                <i class="fas fa-book"></i>
+                            </span>
+                            <p class="title is-4">Wikitext Converter</p>
+                            <p class="subtitle is-6">Convert between Wiki markup formats</p>
+                            <div class="content">
+                                <p>Transform text between different Wiki markup syntaxes.</p>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="../wikitext-converter/index.html" class="card-footer-item">
+                                <span class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </span>
+                                    <span>Open Tool</span>
+                                </span>
+                            </a>
+                        </footer>
+                    </div>
+                </div>
+
+                <!-- V5 Dice -->
+                <div class="column is-4">
+                    <div class="card">
+                        <div class="card-content has-text-centered">
+                            <span class="icon tool-icon has-text-danger-dark">
+                                <i class="fas fa-dice"></i>
+                            </span>
+                            <p class="title is-4">V5 Dice</p>
+                            <p class="subtitle is-6">Vampire: The Masquerade dice roller</p>
+                            <div class="content">
+                                <p>Digital dice roller for Vampire: The Masquerade 5th Edition.</p>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="../v5-dice/index.html" class="card-footer-item">
+                                <span class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </span>
+                                    <span>Open Tool</span>
+                                </span>
+                            </a>
+                        </footer>
+                    </div>
+                </div>
+
+                <!-- Sunrise -->
+                <div class="column is-4">
+                    <div class="card">
+                        <div class="card-content has-text-centered">
+                            <span class="icon tool-icon has-text-warning-dark">
+                                <i class="fas fa-sun"></i>
+                            </span>
+                            <p class="title is-4">Sunrise</p>
+                            <p class="subtitle is-6">Sunrise and sunset calculator</p>
+                            <div class="content">
+                                <p>Calculate sunrise and sunset times for any location.</p>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="../sunrise/index.html" class="card-footer-item">
+                                <span class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </span>
+                                    <span>Open Tool</span>
+                                </span>
+                            </a>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Footer -->
+<footer class="footer is-paddingless">
+    <div class="section has-text-centered py-2">
+        <p>A collection of developer tools and utilities</p>
+    </div>
+</footer>
+</body>
+</html>
