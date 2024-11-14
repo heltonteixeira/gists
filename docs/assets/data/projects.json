@@ -1,0 +1,53 @@
+{
+  "projects": [
+    {
+      "title": "Format Converter",
+      "description": "A web-based tool for converting HTML to PDF and Markdown to HTML, featuring live preview and pretty PDF generation capabilities.",
+      "url": "https://heltonteixeira.github.io/gists/format-converter",
+      "tech": ["HTML", "CSS", "JavaScript", "HTML2PDF.js"],
+      "image": "https://images.unsplash.com/photo-1618477388954-7852f32655ec?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+      "title": "PNG EXIF Viewer",
+      "description": "A web-based tool for viewing metadata and EXIF data of PNG images, with drag-and-drop support and detailed metadata extraction capabilities.",
+      "url": "https://heltonteixeira.github.io/gists/png-exif-viewer",
+      "tech": ["JavaScript", "HTML5", "CSS3", "File API"],
+      "image": "https://images.unsplash.com/photo-1572044162444-ad60f128bdea?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+      "title": "Prompt Enhancer",
+      "description": "An AI-powered tool that enhances prompts with various styles and customizable settings, featuring OpenAI integration and context preservation.",
+      "url": "https://heltonteixeira.github.io/gists/prompt-enhancer",
+      "tech": ["React", "Bulma CSS", "OpenAI API"],
+      "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+      "title": "Sunrise Widget",
+      "description": "A real-time widget displaying current time, sunrise, and sunset information for New Haven, Connecticut, with automatic updates.",
+      "url": "https://heltonteixeira.github.io/gists/sunrise",
+      "tech": ["JavaScript", "Time.is API", "HTML5", "CSS3"],
+      "image": "https://images.unsplash.com/photo-1517511620798-cec17d428bc0?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+      "title": "V5 Dice Roller",
+      "description": "A web-based dice roller for Vampire: The Masquerade 5th Edition, featuring customizable dice counts and theme support.",
+      "url": "https://heltonteixeira.github.io/gists/v5-dice",
+      "tech": ["HTML5", "CSS3", "JavaScript"],
+      "image": "https://images.unsplash.com/photo-1662072628491-c06d228ae18c?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+      "title": "WAV to MP3 Converter",
+      "description": "A web application that converts WAV files to MP3 format with drag-and-drop support, progress tracking, and streaming capabilities.",
+      "url": "https://heltonteixeira.github.io/gists/wav-to-mp3-converter",
+      "tech": ["Node.js", "Express", "FFmpeg", "JavaScript"],
+      "image": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+      "title": "Wikitext Converter",
+      "description": "A tool that converts wikitext to markdown syntax with real-time preview and support for light/dark modes.",
+      "url": "https://heltonteixeira.github.io/gists/wikitext-converter",
+      "tech": ["HTML5", "CSS3", "JavaScript"],
+      "image": "https://images.unsplash.com/photo-1531538606174-0f90ff5dce83?auto=format&fit=crop&q=80&w=800"
+    }
+  ]
+}
