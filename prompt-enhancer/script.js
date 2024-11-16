@@ -50,6 +50,13 @@ class PromptEnhancer {
                 icon: 'fa-pencil-ruler',
                 pattern: 'Make it more bespoke and detailed',
                 description: 'Use bespoke and detailed wording'
+            },
+            {
+                id: 'proofread',
+                name: 'Proofread',
+                icon: 'fa-spell-check',
+                pattern: 'Fix any spelling and grammatical errors, improve word choice and flow while maintaining the original meaning',
+                description: 'Corrects orthographic errors and enhances wording clarity'
             }
         ];
 
